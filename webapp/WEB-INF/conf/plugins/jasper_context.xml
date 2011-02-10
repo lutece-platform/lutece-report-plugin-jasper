@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="jasperReportDAO"  class="fr.paris.lutece.plugins.jasper.business.JasperReportDAO" />  
+	<bean id="jasperPortletDAO"  class="fr.paris.lutece.plugins.jasper.business.portlet.JasperPortletDAO" />    	   
+	<bean id="pdfJasperRender" class="fr.paris.lutece.plugins.jasper.service.export.PdfJasperRender" />
+	<bean id="rtfJasperRender" class="fr.paris.lutece.plugins.jasper.service.export.RtfJasperRender" /> 
+	<bean id="htmlJasperRender" class="fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender" />
+	<bean id="xlsJasperRender" class="fr.paris.lutece.plugins.jasper.service.export.XlsJasperRender" />
+	<bean id="odtJasperRender" class="fr.paris.lutece.plugins.jasper.service.export.OdtJasperRender" />
+	<bean id="csvJasperRender" class="fr.paris.lutece.plugins.jasper.service.export.CsvJasperRender" />
+</beans>

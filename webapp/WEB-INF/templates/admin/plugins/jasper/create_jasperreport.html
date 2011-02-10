@@ -1,0 +1,33 @@
+<div class="content-box" >
+    
+    <h2>#i18n{jasper.create_jasperreport.tableLabel}</h2>
+    
+    <form method="post"   enctype="multipart/form-data" name="create_jasperreport" id="create_jasperreport" action="jsp/admin/plugins/jasper/DoCreateJasperReport.jsp">
+      
+         <p>
+            
+                   	   <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report"  />
+            <div>
+            <label for="jasperreport_description" >#i18n{jasper.create_jasperreport.rowTitleDescription} * :</label>
+            <input type="text" id="jasperreport_description" name="jasperreport_description" size="60" maxlength="50" tabindex="1" />
+            </div>
+        </p>
+        
+        <p>
+            <label for="report_template" >#i18n{jasper.create_jasperreport.rowTitleTemplate}  :</label>
+            <input type="file" name="report_template" size="60" maxlength="100" />
+        </p> 
+        <p>
+            <label report_pool" >#i18n{jasper.create_jasperreport.rowTitlePool}  :</label>
+            <@combo name="report_pool" default_value="" items=pool_list />
+        </p>
+        <p>   
+        	<input type="submit" value="#i18n{jasper.create_jasperreport.buttonValidate}" class="button" tabindex="3" />
+        </p>
+        
+    </form>
+ 
+    
+</div>
+
+

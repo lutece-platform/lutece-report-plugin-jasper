@@ -1,0 +1,28 @@
+
+<div class="content-box">
+       
+    <form method="post"  name="modify_jasperreport" action="jsp/admin/plugins/jasper/DoModifyJasperReport.jsp">
+        <h2>#i18n{jasper.modify_jasperreport.tableLabel}</h2>
+        
+
+        <p>
+             	  
+                   	   <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report" value="${jasperreport.idReport}"/>
+ 			
+             <div>
+            <label for="jasperreport_description" >#i18n{jasper.modify_jasperreport.rowTitleDescription} * :</label>
+            <input type="text" id="jasperreport_description" name="jasperreport_description" size="60" maxlength="50" value="${jasperreport.description}" tabindex="1" />
+            </div>
+        </p>
+        <p>   
+            <input type="submit" value="#i18n{jasper.modify_jasperreport.buttonModifyJasperReport}" class="button" tabindex="3" />
+            <input class="button" type="button" onclick="javascript:history.go(-1)" value="Cancel" />	
+        </p>
+        
+    </form>
+      
+  
+    
+</div>
+
+

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><plug-in>
+    <name>jasper</name>
+    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <version>1.0.1</version>
+    <documentation/>
+    <installation/>
+    <changes/>
+    <user-guide/>
+    <description>jasper.plugin.description</description>
+    <provider>jasper.plugin.provider</provider>
+    <provider-url>http://lutece.paris.fr</provider-url>
+    <icon-url>images/admin/skin/plugins/jasper/jasper.png</icon-url>
+    <copyright/>
+    <db-pool-required>1</db-pool-required>
+    <!-- Admin features parameters -->
+    <admin-features>
+        <admin-feature>
+            <feature-id>JASPER_MANAGEMENT</feature-id>
+            <feature-title>jasper.adminFeature.jasper_management.name</feature-title>
+            <feature-description>jasper.adminFeature.jasper_management.description</feature-description>
+            <feature-level>0</feature-level>
+            <feature-url>jsp/admin/plugins/jasper/ManageJasperReports.jsp</feature-url>
+            <feature-icon-url/>
+      </admin-feature>
+    </admin-features>    
+  	<!-- XPages parameters -->
+    <applications>
+        <application>
+            <application-id>jasper</application-id>
+            <application-class>fr.paris.lutece.plugins.jasper.web.JasperApp</application-class>
+        </application>
+    </applications>
+	<!-- Portlet parameters -->
+    <portlets>
+     <portlet>
+       <portlet-class>fr.paris.lutece.plugins.jasper.business.portlet.JasperPortletHome</portlet-class>
+	   <portlet-type-id>JASPER_PORTLET</portlet-type-id>
+	   <portlet-type-name>jasper.portlet.jasperPortlet.name</portlet-type-name>
+	   <portlet-creation-url>plugins/jasper/CreatePortletJasper.jsp</portlet-creation-url>
+	   <portlet-update-url>plugins/jasper/ModifyPortletJasper.jsp</portlet-update-url>
+	   <portlet-create-action-url>plugins/jasper/DoCreatePortletJasper.jsp</portlet-create-action-url>
+      <portlet-modify-action-url>plugins/jasper/DoModifyPortletJasper.jsp</portlet-modify-action-url>
+	    <!-- optional entries -->
+        <portlet-create-script-template>/admin/portlet/script_create_portlet.html</portlet-create-script-template>
+        <portlet-modify-script-template>/admin/portlet/script_modify_portlet.html</portlet-modify-script-template>
+        <portlet-create-specific-template>/admin/plugins/jasper/portlet/create_portlet_jasper.html</portlet-create-specific-template>
+        <portlet-modify-specific-template>/admin/plugins/jasper/portlet/modify_portlet_jasper.html</portlet-modify-specific-template>
+        <portlet-create-specific-form-template/>
+        <portlet-modify-specific-form-template/> 
+     </portlet>
+   </portlets>
+   
+       <!-- Insert Services -->
+    <insert-services>
+        <insert-service>
+            <insert-service-id>JASPER_REPORT_INSERT_SERVICE</insert-service-id>
+            <insert-service-name>jasper.insertService.name</insert-service-name>
+            <insert-service-bean-class>fr.paris.lutece.plugins.jasper.web.JasperLinkServiceJspBean</insert-service-bean-class>
+            <insert-service-label>jasper.insertService.label</insert-service-label>
+        </insert-service>
+    </insert-services>
+    	   <!-- Daemons -->
+	<daemons>
+		<daemon>
+			<daemon-id>jasperPurgeImage</daemon-id>
+			<daemon-name>
+				jasper.daemon.JasperPurgeImage.name
+			</daemon-name>
+			<daemon-description>
+				jasper.daemon.JasperPurgeImage.description
+			</daemon-description>
+			<daemon-class>
+			    fr.paris.lutece.plugins.jasper.service.purge.DaemonPurgeJasperImage
+			</daemon-class>
+		</daemon>
+	  <!--   <daemon>
+			<daemon-id>jasperGenerateFilesInDirectory</daemon-id>
+			<daemon-name>
+				jasper.daemon.JasperPurgeImage.name
+			</daemon-name>
+			<daemon-description>
+				jasper.daemon.JasperPurgeImage.description
+			</daemon-description>
+			<daemon-class>
+			    fr.paris.lutece.plugins.jasper.service.generation.JasperGenerateFilesInDirectory
+			</daemon-class>
+		</daemon>-->
+	</daemons>
+</plug-in>

@@ -1,0 +1,48 @@
+  <div class="content-box" >
+    <h2>#i18n{jasper.manage_jasperreport.tableLabel}</h2>    
+    <table>
+        <tr>
+		  <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report"  />
+ 			<th>#i18n{jasper.manage_jasperreport.columnDescription}</th>
+		    <th>#i18n{jasper.manage_jasperreport.columnUrl}</th>
+			<th>#i18n{jasper.manage_jasperreport.columnPool}</th>
+			<th>#i18n{jasper.manage_jasperreport.columnAction}</th>
+        </tr>
+        <#list jasperreport_list as jasperreport >
+         <tr>
+   
+             
+             
+                   	   <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report"  />
+             
+           
+              <td><a href="jsp/admin/plugins/jasper/ModifyJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}" class="bullet-link">
+                 ${jasperreport.description}
+                </a>
+                </td>
+           
+                           <td>${jasperreport.url}</td>
+                                <td>${jasperreport.pool}</td>
+ 			 
+             <td>
+                <a href="jsp/admin/plugins/jasper/RemoveJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}" >
+                    <img src="images/admin/skin/actions/delete.png" alt="#i18n{portal.util.labelDelete}" title="#i18n{portal.util.labelDelete}" />
+                </a>
+                 <a href="jsp/admin/plugins/jasper/ManageReportFileTypes.jsp?jasperreport_id_report=${jasperreport.idReport}" >
+                    <img src="images/admin/skin/actions/generation.png" alt="#i18n{jasper.manage_jasperreport.labelGeneration}" title="#i18n{jasper.manage_jasperreport.labelGeneration}" />
+                </a>
+             </td>
+        </tr>
+        </#list>
+    </table>
+
+    <form method="post"  action="jsp/admin/plugins/jasper/CreateJasperReport.jsp">
+        <input type="submit" value="#i18n{jasper.manage_jasperreport.buttonAddJasperReport}" class="button" />
+    </form>
+
+</div>
+
+
+  
+
+
