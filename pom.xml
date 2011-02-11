@@ -17,7 +17,7 @@
 		<repository>
           <id>luteceSnapshot</id>
           <name>luteceSnapshot</name>
-          <url>http://dev.lutece.paris.fr/snapshot_repository</url>
+          <url>http://dev.lutece.paris.fr/snapshot_repository/plugin-jasper</url>
           <snapshots>
               <enabled>true</enabled>
           </snapshots>
@@ -25,14 +25,14 @@
         <repository>
           <id>lutece</id>
           <name>luteceRepository</name>
-          <url>http://dev.lutece.paris.fr/maven_repository</url>
+          <url>http://dev.lutece.paris.fr/maven_repository/plugin-jasper</url>
           <snapshots>
               <enabled>false</enabled>
           </snapshots>
         </repository>
 		<repository>
 			<id>jasperreports</id>
-			<url>http://jasperreports.sourceforge.net/maven2</url>
+			<url>http://jasperreports.sourceforge.net/maven2/plugin-jasper</url>
 		</repository>
 	</repositories>
 
@@ -72,8 +72,8 @@
 		<jiraComponentId>10036</jiraComponentId>
 	</properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/portal/trunk/plugins/cms</url>
+        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</connection>
+        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</developerConnection>
+        <url>http://dev.lutece.paris.fr/viewvc/portal/trunk/plugins/cms/plugin-jasper</url>
     </scm>
 </project>
