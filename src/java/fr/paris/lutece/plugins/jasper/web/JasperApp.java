@@ -34,11 +34,10 @@
 package fr.paris.lutece.plugins.jasper.web;
 
 import fr.paris.lutece.plugins.jasper.service.JasperFileLinkService;
-import fr.paris.lutece.portal.service.cache.CacheableService;
+import fr.paris.lutece.portal.service.cache.AbstractCacheableService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.portal.PortalService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 
@@ -52,16 +51,13 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * This class provides a simple implementation of an XPage
  */
-public class JasperApp implements XPageApplication, CacheableService
+public class JasperApp extends AbstractCacheableService implements XPageApplication
 {
     private static final String PROPERTY_PATH_LABEL = "jasper.pagePathLabel";
     private static final String PROPERTY_PAGE_TITLE = "jasper.pageTitle";
     private static Map<String, String> _mapSiteMapCache = new HashMap<String, String>(  );
     private static final String SERVICE_NAME = "JasperService";
     private static boolean _bRegister;
-
-    // private fields
-    private Plugin _plugin;
 
     /**
      * Creates a new JasperApp object
@@ -70,7 +66,7 @@ public class JasperApp implements XPageApplication, CacheableService
     {
         if ( !_bRegister )
         {
-            // PortalService.registerCacheableService( getName(  ), this );
+            initCache();
             _bRegister = true;
         }
     }
@@ -116,23 +112,10 @@ public class JasperApp implements XPageApplication, CacheableService
         return page;
     }
 
-    public int getCacheSize(  )
-    {
-        return _mapSiteMapCache.size(  );
-    }
-
-    public boolean isCacheEnable(  )
-    {
-        return true;
-    }
-
-    public void resetCache(  )
-    {
-        _mapSiteMapCache.clear(  );
-    }
 
     public String getName(  )
     {
         return SERVICE_NAME;
     }
+
 }
