@@ -54,7 +54,7 @@
 			<version>3.6</version>
 		</dependency>
 		<dependency>
-			<groupId>jasperreports</groupId>
+			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>3.7.1</version>
 			<exclusions>
@@ -67,9 +67,7 @@
 	</dependencies>
 
 	<properties>
-		<componentName>jasper</componentName>
-		<jiraProjectName>LUTECE</jiraProjectName>
-		<jiraComponentId>10036</jiraComponentId>
+		<jiraProjectName>JASPER</jiraProjectName>
 	</properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</connection>
