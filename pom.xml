@@ -68,7 +68,9 @@
     </dependencies>
 
     <properties>
-        <jiraProjectName>JASPER</jiraProjectName>
+		<componentName>jasper</componentName>
+		<jiraProjectName>JASPER</jiraProjectName>
+		<jiraComponentId>10223</jiraComponentId>
     </properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</connection>
