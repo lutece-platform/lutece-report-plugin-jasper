@@ -11,7 +11,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-jasper</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <name>Lutece jasper plugin</name>
 
     <repositories>
@@ -73,8 +73,8 @@
 		<jiraComponentId>10223</jiraComponentId>
     </properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/cms/plugin-jasper</url>
+        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/tags/plugin-jasper-1.0.2</connection>
+        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/tags/plugin-jasper-1.0.2</developerConnection>
+        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/tags/plugin-jasper-1.0.2</url>
     </scm>
 </project>
