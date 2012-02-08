@@ -41,9 +41,7 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,7 +53,8 @@ public class JasperApp extends AbstractCacheableService implements XPageApplicat
 {
     private static final String PROPERTY_PATH_LABEL = "jasper.pagePathLabel";
     private static final String PROPERTY_PAGE_TITLE = "jasper.pageTitle";
-    private static Map<String, String> _mapSiteMapCache = new HashMap<String, String>(  );
+    // private static Map<String, String> _mapSiteMapCache = new HashMap<String,
+    // String>( );
     private static final String SERVICE_NAME = "JasperService";
     private static boolean _bRegister;
 
@@ -82,34 +81,36 @@ public class JasperApp extends AbstractCacheableService implements XPageApplicat
         throws SiteMessageException
     {
         XPage page = new XPage(  );
-        String strKey = JasperFileLinkService.INSTANCE.getKey( request );
+        // String strKey = JasperFileLinkService.INSTANCE.getKey( request );
 
         Locale locale = request.getLocale(  );
 
         // Check the key in the cache
-        if ( !_mapSiteMapCache.containsKey( strKey ) )
-        {
+        // if ( !_mapSiteMapCache.containsKey( strKey ) )
+        // {
             byte[] arrayContent = JasperFileLinkService.exportFile( request );
 
             // Build the HTML document from the report
             String strPage = new String( arrayContent );
 
-            // Add it to the cache
-            _mapSiteMapCache.put( strKey, strPage );
+        // // Add it to the cache
+        // _mapSiteMapCache.put( strKey, strPage );
 
             page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATH_LABEL, locale ) );
             page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGE_TITLE, locale ) );
             page.setContent( strPage );
 
-            return page;
-        }
+        return page;
+        // }
 
         // The document exist in the cache
-        page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATH_LABEL, locale ) );
-        page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGE_TITLE, locale ) );
-        page.setContent( (String) _mapSiteMapCache.get( strKey ) );
+        // page.setPathLabel( I18nService.getLocalizedString(
+        // PROPERTY_PATH_LABEL, locale ) );
+        // page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGE_TITLE,
+        // locale ) );
+        // page.setContent( (String) _mapSiteMapCache.get( strKey ) );
 
-        return page;
+        // return page;
     }
 
 
