@@ -48,7 +48,7 @@ public class JasperReport
     private String _strPool;
     private String _strFileFolder;
     private java.sql.Timestamp _dateModification;
-    private ArrayList<String> _listFileFormats= new ArrayList<String>();
+    private ArrayList<String> _listFileFormats = new ArrayList<String>(  );
 
     /**
      * Returns the IdReport
@@ -95,7 +95,6 @@ public class JasperReport
     {
         _strFileFolder = strFileFolder;
     }
-
 
     /**
      * Returns the Url of the jasper file
@@ -148,6 +147,7 @@ public class JasperReport
     {
         _dateModification = dateModification;
     }
+
     /**
      * Adds a file format
      *
@@ -155,8 +155,9 @@ public class JasperReport
      */
     public void addFileFormat( String strFileFormat )
     {
-        _listFileFormats.add(strFileFormat);
+        _listFileFormats.add( strFileFormat );
     }
+
     /**
      * Adds a file format
      *
@@ -164,11 +165,12 @@ public class JasperReport
      */
     public void addFileFormats( ArrayList<String> listFileFormat )
     {
-    	for(String strFileFormat :listFileFormat)
-    	{
-    		addFileFormat(strFileFormat);
-    	}
+        for ( String strFileFormat : listFileFormat )
+        {
+            addFileFormat( strFileFormat );
+        }
     }
+
     public ArrayList<String> getFileFormats(  )
     {
         return _listFileFormats;

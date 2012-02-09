@@ -48,12 +48,13 @@ import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
+import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,28 +63,25 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 
-public class CsvJasperRender implements ILinkJasperReport, Cloneable
+public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, Cloneable
 {
-    private static final String PROPERTY_FILES_PATH = "jasper.files.path";
-    private static final String PARAMETER_JASPER_VALUE = "value";
-
-    public String getLink( String strReportId )
-    {
-        //returns the link of the file pointing to the pdf file
-        return "jsp/site/plugins/jasper/DownloadFile.jsp?report_type=csv&report_id=" + strReportId;
-    }
+    protected static final String PROPERTY_FILES_PATH = "jasper.files.path";
+    protected static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
+    protected static final String PROPERTY_EXPORT_CHARACTER_ENCODING = "jasper.export.characterEncoding";
+    protected static final String PARAMETER_JASPER_VALUE = "value";
+    protected static final String REGEX_ID = "^[\\d]+$";
 
     public byte[] getBuffer( String strReportId, HttpServletRequest request )
     {
-        byte[] byteArray = new byte[1024];
+        StringBuffer sb = new StringBuffer(  );
+        Plugin plugin = PluginService.getPlugin( "jasper" );
+        Connection conn = null;
+        fr.paris.lutece.plugins.jasper.business.JasperReport report = null;
 
         try
         {
-            Plugin plugin = PluginService.getPlugin( "jasper" );
+            report = JasperReportHome.findByPrimaryKey( strReportId, plugin );
 
-            //get the report Id and construct the path to the corresponding jasper file
-            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId,
-                    plugin );
             String strPageDesc = report.getUrl(  );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
             String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
@@ -91,51 +89,72 @@ public class CsvJasperRender implements ILinkJasperReport, Cloneable
             File reportFile = new File( strAbsolutePath );
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile.getPath(  ) );
-
-            Map parameters = new HashMap(  );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
+            Map parameters = new HashMap(  );
 
             for ( int i = 0; i < listValues.size(  ); i++ )
             {
-                parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
+                parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ),
+                    listValues.get( i ).matches( REGEX_ID ) ? Integer.parseInt( listValues.get( i ) )
+                                                            : listValues.get( i ) );
             }
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,
-                    JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  ) );
+            conn = JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  );
 
-            JRCsvExporter exporter = new JRCsvExporter(  );
-            exporter.setParameter( JRExporterParameter.CHARACTER_ENCODING, "ISO8859_1" );
-            exporter.setParameter( JRCsvExporterParameter.FIELD_DELIMITER, ";" );
-
-            ByteArrayOutputStream streamReport = new ByteArrayOutputStream(  );
+            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, conn );
+            JRExporter exporter = getExporter( request, report );
             exporter.setParameter( JRExporterParameter.JASPER_PRINT, jasperPrint );
-            exporter.setParameter( JRExporterParameter.OUTPUT_STREAM, streamReport );
+            exporter.setParameter( JRExporterParameter.CHARACTER_ENCODING,
+                AppPropertiesService.getProperty( PROPERTY_EXPORT_CHARACTER_ENCODING ) );
+            exporter.setParameter( JRExporterParameter.OUTPUT_STRING_BUFFER, sb );
 
             exporter.exportReport(  );
-            byteArray = streamReport.toByteArray(  );
+
+            if ( exporter instanceof JRHtmlExporter )
+            {
+                ( (JRHtmlExporter) exporter ).reset(  );
+            }
         }
         catch ( Exception e )
         {
             AppLogService.error( e );
         }
+        finally
+        {
+            if ( conn != null )
+            {
+                if ( report != null )
+                {
+                    try
+                    {
+                        JasperConnectionService.getConnectionService( report.getPool(  ) ).freeConnection( conn );
+                    }
+                    catch ( Exception e )
+                    {
+                        try
+                        {
+                            conn.close(  );
+                        }
+                        catch ( SQLException s )
+                        {
+                            AppLogService.error( s );
+                        }
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        conn.close(  );
+                    }
+                    catch ( SQLException s )
+                    {
+                        AppLogService.error( s );
+                    }
+                }
+            }
+        }
 
-        return byteArray;
-    }
-
-    public String getFileName( String strReportId )
-    {
-        return strReportId + ".csv";
-    }
-
-    public String getFileType(  )
-    {
-        return "csv";
-    }
-
-    public JRExporter getExporter( HttpServletRequest request,
-        fr.paris.lutece.plugins.jasper.business.JasperReport report )
-    {
-        // TODO Auto-generated method stub
-        return null;
+        return sb.toString(  ).getBytes(  );
     }
 }

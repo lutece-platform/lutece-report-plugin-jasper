@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.jasper.service;
 
+import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,9 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-
-import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
 public enum JasperFileLinkService
 {
     /**
@@ -62,26 +61,29 @@ public enum JasperFileLinkService
 
     public static String getLink( String strReportId, String strType )
     {
-    	FileTypeContext  context = getFileTypeContext(strType);
-        return  context.getFileLink( strReportId );
+        FileTypeContext context = getFileTypeContext( strType );
+
+        return context.getFileLink( strReportId );
     }
-    
-    static FileTypeContext getFileTypeContext(String strType)
+
+    static FileTypeContext getFileTypeContext( String strType )
     {
-     Map<String,ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes();
- 	 Collection<ILinkJasperReport> col = mapClasses.values(  );
- 	  FileTypeContext fileTypeContext = null;
+        Map<String, ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes(  );
+        Collection<ILinkJasperReport> col = mapClasses.values(  );
+        FileTypeContext fileTypeContext = null;
+
         for ( ILinkJasperReport renderFormat : col )
         {
-         if(renderFormat.getFileType().equals(strType))
-         {
-        	 return new FileTypeContext( renderFormat);
-         }
-         else
-         {
-        	 fileTypeContext=new FileTypeContext(new HtmlJasperRender(  ));
-         }
+            if ( renderFormat.getFileType(  ).equals( strType ) )
+            {
+                return new FileTypeContext( renderFormat );
+            }
+            else
+            {
+                fileTypeContext = new FileTypeContext( new HtmlJasperRender(  ) );
+            }
         }
+
         return fileTypeContext;
     }
 
@@ -94,9 +96,8 @@ public enum JasperFileLinkService
     {
         String strReportId = request.getParameter( PARAMETER_REPORT_ID );
         String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        FileTypeContext  context = getFileTypeContext(strType);
+        FileTypeContext context = getFileTypeContext( strType );
 
-        
         byte[] buffer = new byte[1024];
 
         buffer = context.getBuffer( strReportId, request );
@@ -109,10 +110,9 @@ public enum JasperFileLinkService
         String strReportId = strJasperName;
         String strType = request.getParameter( PARAMETER_REPORT_TYPE );
 
-  byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[1024];
 
-
-        FileTypeContext  context = getFileTypeContext(strType);
+        FileTypeContext context = getFileTypeContext( strType );
         buffer = context.getBuffer( strReportId, request );
 
         return buffer;
@@ -127,8 +127,9 @@ public enum JasperFileLinkService
     {
         String strReportId = request.getParameter( PARAMETER_REPORT_ID );
         String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        FileTypeContext  context = getFileTypeContext(strType);
-        return  context.getFileName( strReportId );
+        FileTypeContext context = getFileTypeContext( strType );
+
+        return context.getFileName( strReportId );
     }
 
     /**
@@ -149,8 +150,7 @@ public enum JasperFileLinkService
             strValue = request.getParameter( PARAMETER_JASPER_VALUE + ( i + 1 ) );
         }
 
-        Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
-
+        //Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
         return list;
     }
 
@@ -173,9 +173,9 @@ public enum JasperFileLinkService
 
         for ( int i = 0; i < listValues.size(  ); i++ )
         {
-            strParameters += PARAMETER_JASPER_VALUE+(i+1)+"_"+listValues.get( i );
+            strParameters += ( PARAMETER_JASPER_VALUE + ( i + 1 ) + "_" + listValues.get( i ) );
         }
 
-        return strReportId + strDBPageId+"_" + strParameters;
+        return strReportId + strDBPageId + "_" + strParameters;
     }
 }

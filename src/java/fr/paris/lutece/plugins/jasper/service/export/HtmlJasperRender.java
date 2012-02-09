@@ -33,114 +33,28 @@
  */
 package fr.paris.lutece.plugins.jasper.service.export;
 
-import fr.paris.lutece.plugins.jasper.business.JasperReportHome;
-import fr.paris.lutece.plugins.jasper.service.ILinkJasperReport;
-import fr.paris.lutece.plugins.jasper.service.JasperConnectionService;
 import fr.paris.lutece.plugins.jasper.service.JasperFileLinkService;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
-import net.sf.jasperreports.engine.util.JRLoader;
 
 import java.io.File;
 
-import java.sql.Connection;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 
-public class HtmlJasperRender implements ILinkJasperReport
+public class HtmlJasperRender extends AbstractDefaultJasperRender
 {
-    private static final String PROPERTY_FILES_PATH = "jasper.files.path";
-    private static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
-    private static final String PARAMETER_JASPER_VALUE = "value";
-
-    public byte[] getBuffer( String strReportId, HttpServletRequest request )
-    {
-        StringBuffer sb = new StringBuffer(  );
-        Plugin plugin = PluginService.getPlugin( "jasper" );
-
-        try
-        {
-            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId,
-                    plugin );
-
-            String strPageDesc = report.getUrl(  );
-            String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
-
-            File reportFile = new File( strAbsolutePath );
-
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile.getPath(  ) );
-            List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
-            Map parameters = new HashMap(  );
-
-            for ( int i = 0; i < listValues.size(  ); i++ )
-            {
-            	parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
-            }
-
-            Connection conn = JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  );
-            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, conn );
-            JasperConnectionService.getConnectionService( report.getPool(  ) ).freeConnection( conn );
-
-            JasperConnectionService.getConnectionService( report.getPool(  ) ).freeConnection( conn );
-
-            JRHtmlExporter exporter = new JRHtmlExporter(  );
-
-            Map imagesMap = new HashMap(  );
-            request.getSession(  ).setAttribute( "IMAGES_MAP", imagesMap );
-
-            exporter.setParameter( JRExporterParameter.JASPER_PRINT, jasperPrint );
-            exporter.setParameter( JRExporterParameter.OUTPUT_STRING_BUFFER, sb );
-            exporter.setParameter( JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, false );
-            exporter.setParameter( JRHtmlExporterParameter.FRAMES_AS_NESTED_TABLES, false );
-            exporter.setParameter( JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false );
-            exporter.setParameter( JRHtmlExporterParameter.SIZE_UNIT, JRHtmlExporterParameter.SIZE_UNIT_PIXEL );
-            exporter.setParameter( JRHtmlExporterParameter.CHARACTER_ENCODING, "ISO-8859-9");
-            
-            //Save image Map to file system
-            String strImageFolderPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-            String strAbsoluteImagePath = AppPathService.getWebAppPath(  ) + strImageFolderPath + strPageDesc + "/" +
-                JasperFileLinkService.INSTANCE.getKey( request );
-            File imageFolder = new File( strAbsoluteImagePath );
-
-            if ( imageFolder.exists(  ) == false )
-            {
-                imageFolder.mkdirs(  );
-            }
-
-            exporter.setParameter( JRHtmlExporterParameter.IMAGES_DIR, imageFolder );
-            exporter.setParameter( JRHtmlExporterParameter.IMAGES_URI,
-                "plugins/jasper/" + strPageDesc + "/" + JasperFileLinkService.INSTANCE.getKey( request ) + "/" );
-            exporter.setParameter( JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, true );
-            exporter.exportReport(  );
-            exporter.reset(  );
-        }
-        catch ( Exception e )
-        {
-            AppLogService.error( e );
-        }
-
-        return sb.toString(  ).getBytes(  );
-    }
-
     public String getFileName( String strReportId )
     {
-    	return strReportId + ".html";
+        return strReportId + ".html";
     }
 
     public String getLink( String strReportId )
@@ -167,10 +81,41 @@ public class HtmlJasperRender implements ILinkJasperReport
             }
         }
     }
-    
-	public String getFileType() {
-		
-		return "html";
-	}
-	
+
+    public String getFileType(  )
+    {
+        return "html";
+    }
+
+    public JRExporter getExporter( HttpServletRequest request,
+        fr.paris.lutece.plugins.jasper.business.JasperReport report )
+    {
+        JRHtmlExporter exporter = new JRHtmlExporter(  );
+
+        Map imagesMap = new HashMap(  );
+        request.getSession(  ).setAttribute( "IMAGES_MAP", imagesMap );
+
+        exporter.setParameter( JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, false );
+        exporter.setParameter( JRHtmlExporterParameter.FRAMES_AS_NESTED_TABLES, false );
+        exporter.setParameter( JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false );
+        exporter.setParameter( JRHtmlExporterParameter.SIZE_UNIT, JRHtmlExporterParameter.SIZE_UNIT_PIXEL );
+
+        // Save image Map to file system
+        String strImageFolderPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
+        String strAbsoluteImagePath = AppPathService.getWebAppPath(  ) + strImageFolderPath + report.getUrl(  ) + "/" +
+            JasperFileLinkService.INSTANCE.getKey( request );
+        File imageFolder = new File( strAbsoluteImagePath );
+
+        if ( imageFolder.exists(  ) == false )
+        {
+            imageFolder.mkdirs(  );
+        }
+
+        exporter.setParameter( JRHtmlExporterParameter.IMAGES_DIR, imageFolder );
+        exporter.setParameter( JRHtmlExporterParameter.IMAGES_URI,
+            "plugins/jasper/" + report.getUrl(  ) + "/" + JasperFileLinkService.INSTANCE.getKey( request ) + "/" );
+        exporter.setParameter( JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, true );
+
+        return exporter;
+    }
 }

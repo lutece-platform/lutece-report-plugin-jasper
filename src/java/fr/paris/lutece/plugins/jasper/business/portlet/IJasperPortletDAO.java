@@ -37,12 +37,11 @@ import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 
 
-
 public interface IJasperPortletDAO extends IPortletInterfaceDAO
 {
     /**
      * Deletes record from table
-
+    
      * @param nPortletId The indentifier of the Portlet
      */
     void delete( int nPortletId );

@@ -42,6 +42,8 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+
+import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -79,9 +81,9 @@ public class PdfJasperRender implements ILinkJasperReport
             Plugin plugin = PluginService.getPlugin( "jasper" );
 
             //get the report Id and construct the path to the corresponding jasper file
-            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId ,
+            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId,
                     plugin );
-            String strPageDesc = report.getUrl(  ) ;
+            String strPageDesc = report.getUrl(  );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
             String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
 
@@ -91,10 +93,12 @@ public class PdfJasperRender implements ILinkJasperReport
 
             Map parameters = new HashMap(  );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
+
             for ( int i = 0; i < listValues.size(  ); i++ )
             {
                 parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
             }
+
             JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,
                     JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  ) );
 
@@ -108,7 +112,7 @@ public class PdfJasperRender implements ILinkJasperReport
         }
         catch ( Exception e )
         {
-        	AppLogService.error(e);
+            AppLogService.error( e );
         }
 
         return byteArray;
@@ -119,8 +123,15 @@ public class PdfJasperRender implements ILinkJasperReport
         return strReportId + ".pdf";
     }
 
-	public String getFileType() {
-		
-		return "pdf";
-	}
+    public String getFileType(  )
+    {
+        return "pdf";
+    }
+
+    public JRExporter getExporter( HttpServletRequest request,
+        fr.paris.lutece.plugins.jasper.business.JasperReport report )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

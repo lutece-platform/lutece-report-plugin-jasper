@@ -43,6 +43,7 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -60,7 +61,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 
-public class RtfJasperRender implements ILinkJasperReport,Cloneable
+public class RtfJasperRender implements ILinkJasperReport, Cloneable
 {
     private static final String PROPERTY_FILES_PATH = "jasper.files.path";
     private static final String PARAMETER_JASPER_VALUE = "value";
@@ -80,9 +81,9 @@ public class RtfJasperRender implements ILinkJasperReport,Cloneable
             Plugin plugin = PluginService.getPlugin( "jasper" );
 
             //get the report Id and construct the path to the corresponding jasper file
-            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId ,
+            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId,
                     plugin );
-            String strPageDesc = report.getUrl(  ) ;
+            String strPageDesc = report.getUrl(  );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
             String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
 
@@ -92,14 +93,16 @@ public class RtfJasperRender implements ILinkJasperReport,Cloneable
 
             Map parameters = new HashMap(  );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
+
             for ( int i = 0; i < listValues.size(  ); i++ )
             {
                 parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
             }
+
             JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,
                     JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  ) );
 
-            JRRtfExporter exporter = new JRRtfExporter();
+            JRRtfExporter exporter = new JRRtfExporter(  );
             ByteArrayOutputStream streamReport = new ByteArrayOutputStream(  );
             exporter.setParameter( JRExporterParameter.JASPER_PRINT, jasperPrint );
             exporter.setParameter( JRExporterParameter.OUTPUT_STREAM, streamReport );
@@ -109,7 +112,7 @@ public class RtfJasperRender implements ILinkJasperReport,Cloneable
         }
         catch ( Exception e )
         {
-        	AppLogService.error(e);
+            AppLogService.error( e );
         }
 
         return byteArray;
@@ -120,8 +123,15 @@ public class RtfJasperRender implements ILinkJasperReport,Cloneable
         return strReportId + ".doc";
     }
 
-	public String getFileType() {
-		
-		return "doc";
-	}
+    public String getFileType(  )
+    {
+        return "doc";
+    }
+
+    public JRExporter getExporter( HttpServletRequest request,
+        fr.paris.lutece.plugins.jasper.business.JasperReport report )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

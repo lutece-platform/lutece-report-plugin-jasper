@@ -56,6 +56,7 @@ import fr.paris.lutece.util.html.Paginator;
 import fr.paris.lutece.util.url.UrlItem;
 
 import org.apache.commons.fileupload.FileItem;
+
 import org.w3c.tidy.Report;
 
 import java.io.File;
@@ -100,14 +101,13 @@ public class JasperJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_PAGE_TITLE_MANAGE_JASPERREPORTS = "jasper.manage_jasperreports.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MODIFY_JASPERREPORT = "jasper.modify_jasperreport.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_CREATE_JASPERREPORT = "jasper.create_jasperreport.pageTitle";
-    
     private static final String PROPERTY_PAGE_TITLE_MANAGE_REPORT_FILE_TYPES = "jasper.manage_report_file_types.pageTitle";
 
     // Markers
     private static final String MARK_JASPERREPORT_LIST = "jasperreport_list";
     private static final String MARK_JASPERREPORT = "jasperreport";
     private static final String MARK_FILE_TYPES = "file_types";
-    private static final String MARK_GENERATED_FILE_TYPES="generated_file_types";
+    private static final String MARK_GENERATED_FILE_TYPES = "generated_file_types";
     private static final String MARK_PAGINATOR = "paginator";
     private static final String MARK_NB_ITEMS_PER_PAGE = "nb_items_per_page";
     private static final String MARK_SECTION_POOL_LIST = "pool_list";
@@ -182,6 +182,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         return getAdminPage( template.getHtml(  ) );
     }
+
     /**
      * Process the data capture form of a new jasperreport
      *
@@ -212,7 +213,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
         }
         catch ( IOException e )
         {
-           AppLogService.error(e);
+            AppLogService.error( e );
         }
 
         JasperReportHome.create( jasperreport, getPlugin(  ) );
@@ -245,18 +246,18 @@ public class JasperJspBean extends PluginAdminPageJspBean
     public String doRemoveJasperReport( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        //TODO remove appropriate folder
-         JasperReport report = JasperReportHome.findByPrimaryKey(nId, getPlugin());
-         String strCleanReportName = UploadUtil.cleanFileName( report.getDescription() );
-         
-         
-         String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-         String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strCleanReportName;
-         File folder = new File( strFolderPath );
-         deleteFolderWithContent(folder);
-         JasperReportHome.remove( nId, getPlugin(  ) );
 
-         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
+        //TODO remove appropriate folder
+        JasperReport report = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
+        String strCleanReportName = UploadUtil.cleanFileName( report.getDescription(  ) );
+
+        String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
+        String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strCleanReportName;
+        File folder = new File( strFolderPath );
+        deleteFolderWithContent( folder );
+        JasperReportHome.remove( nId, getPlugin(  ) );
+
+        return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
     }
 
     /**
@@ -279,7 +280,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         return getAdminPage( template.getHtml(  ) );
     }
-    
+
     /**
      * Returns the fiule type selection for generation
      *
@@ -292,20 +293,18 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
         JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
-        Map<String,ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes();
+        Map<String, ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes(  );
         Collection<ILinkJasperReport> listFileTypes = mapClasses.values(  );
-        
+
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_JASPERREPORT, jasperreport );
         model.put( MARK_FILE_TYPES, listFileTypes );
-        model.put( MARK_GENERATED_FILE_TYPES, jasperreport.getFileFormats() );
-        
+        model.put( MARK_GENERATED_FILE_TYPES, jasperreport.getFileFormats(  ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_REPORT_FILE_TYPES, getLocale(  ), model );
 
         return getAdminPage( template.getHtml(  ) );
     }
-    
 
     /**
      * Process the change form of a jasperreport
@@ -336,7 +335,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
     }
-    
+
     /**
      * Process the change form of a jasperreport
      *
@@ -356,14 +355,13 @@ public class JasperJspBean extends PluginAdminPageJspBean
         int nIdReport = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
         jasperreport.setIdReport( nIdReport );
 
-        if ( request.getParameter( PARAMETER_REPORT_FILE_FOLDER).equals( "" ) )
+        if ( request.getParameter( PARAMETER_REPORT_FILE_FOLDER ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
         jasperreport.setFileFolder( request.getParameter( PARAMETER_REPORT_FILE_FOLDER ) );
         //TODO Important To change file types
-        
         JasperReportHome.update( jasperreport, getPlugin(  ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
@@ -400,7 +398,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
             }
             catch ( Exception e )
             {
-            	AppLogService.error(e);
+                AppLogService.error( e );
             }
 
             String filePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportName + "/" + strNameFile;

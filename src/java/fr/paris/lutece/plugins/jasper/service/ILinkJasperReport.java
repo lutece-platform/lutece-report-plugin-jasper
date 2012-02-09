@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.jasper.service;
 
+import net.sf.jasperreports.engine.JRExporter;
+
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -43,7 +45,8 @@ public interface ILinkJasperReport extends Cloneable
     byte[] getBuffer( String strReportId, HttpServletRequest request );
 
     String getFileName( String strReportId );
-    
-    String getFileType();
 
+    String getFileType(  );
+
+    JRExporter getExporter( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report );
 }

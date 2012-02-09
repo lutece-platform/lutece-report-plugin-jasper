@@ -54,6 +54,7 @@ public final class JasperReportDAO implements IJasperReportDAO
     private static final String SQL_QUERY_UPDATE = "UPDATE jasper SET id_report = ?, description = ? WHERE id_report = ?";
     private static final String SQL_QUERY_SELECTALL = "SELECT id_report, description, url,pool FROM jasper";
     private static final String SQL_QUERY_SELECT_FILE_FORMATS = "SELECT  file_format FROM jasper_file_format WHERE  id_report= ? ";
+
     /**
      * Generates a new primary key
      * @param plugin The Plugin
@@ -120,15 +121,15 @@ public final class JasperReportDAO implements IJasperReportDAO
             report.setDescription( daoUtil.getString( 2 ) );
             report.setUrl( daoUtil.getString( 3 ) );
             report.setPool( daoUtil.getString( 4 ) );
-            report.setFileFolder( daoUtil.getString( 5 ));
-            report.addFileFormats(loadFileFormats(nId, plugin));
-            
+            report.setFileFolder( daoUtil.getString( 5 ) );
+            report.addFileFormats( loadFileFormats( nId, plugin ) );
         }
 
         daoUtil.free(  );
 
         return report;
     }
+
     /**
      * Load the file formats
      * @param nId The identifier of the report
@@ -141,13 +142,12 @@ public final class JasperReportDAO implements IJasperReportDAO
         daoUtil.setInt( 1, nId );
         daoUtil.executeQuery(  );
 
-        ArrayList<String> listFileFormats = new ArrayList<String>();
-            while ( daoUtil.next(  ) )
-            {
-            
-            	listFileFormats.add(  daoUtil.getString( 1 ) );
-            }
+        ArrayList<String> listFileFormats = new ArrayList<String>(  );
 
+        while ( daoUtil.next(  ) )
+        {
+            listFileFormats.add( daoUtil.getString( 1 ) );
+        }
 
         daoUtil.free(  );
 
