@@ -113,7 +113,7 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
 
         exporter.setParameter( JRHtmlExporterParameter.IMAGES_DIR, imageFolder );
         exporter.setParameter( JRHtmlExporterParameter.IMAGES_URI,
-            "plugins/jasper/" + report.getUrl(  ) + "/" + JasperFileLinkService.INSTANCE.getKey( request ) + "/" );
+            "plugins/jasper/images/" + report.getUrl(  ) + "/" + JasperFileLinkService.INSTANCE.getKey( request ) + "/" );
         exporter.setParameter( JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, true );
 
         return exporter;
