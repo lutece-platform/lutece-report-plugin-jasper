@@ -90,7 +90,7 @@
 		<servlet>
 			<servlet-name>JasperDownloadFile</servlet-name>
 			<servlet-class>fr.paris.lutece.plugins.jasper.service.DownloadFileServlet</servlet-class>
-			<url-pattern>/jasper/downloadFile</url-pattern>
+			<url-pattern>/servlet/plugins/jasper/downloadFile</url-pattern>
 		</servlet>
 	</servlets>
 </plug-in>
