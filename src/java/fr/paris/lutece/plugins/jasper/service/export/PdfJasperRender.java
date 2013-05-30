@@ -43,6 +43,16 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -50,15 +60,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 public class PdfJasperRender implements ILinkJasperReport
@@ -76,43 +77,78 @@ public class PdfJasperRender implements ILinkJasperReport
     {
         byte[] byteArray = new byte[1024];
 
+        Connection connection = null;
+        fr.paris.lutece.plugins.jasper.business.JasperReport report = null;
         try
         {
             Plugin plugin = PluginService.getPlugin( "jasper" );
 
             //get the report Id and construct the path to the corresponding jasper file
-            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId,
+            report = JasperReportHome.findByPrimaryKey( strReportId,
                     plugin );
-            String strPageDesc = report.getUrl(  );
+            String strPageDesc = report.getUrl( );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
+            String strAbsolutePath = AppPathService.getWebAppPath( ) + strDirectoryPath + strPageDesc;
 
             File reportFile = new File( strAbsolutePath );
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile.getPath(  ) );
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile.getPath( ) );
 
-            Map parameters = new HashMap(  );
+            Map parameters = new HashMap( );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
 
-            for ( int i = 0; i < listValues.size(  ); i++ )
+            for ( int i = 0; i < listValues.size( ); i++ )
             {
                 parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
             }
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,
-                    JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  ) );
+            connection = JasperConnectionService.getConnectionService( report.getPool( ) ).getConnection( );
+            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, connection );
 
-            JRPdfExporter exporter = new JRPdfExporter(  );
-            ByteArrayOutputStream streamReport = new ByteArrayOutputStream(  );
+            JRPdfExporter exporter = new JRPdfExporter( );
+            ByteArrayOutputStream streamReport = new ByteArrayOutputStream( );
             exporter.setParameter( JRExporterParameter.JASPER_PRINT, jasperPrint );
             exporter.setParameter( JRExporterParameter.OUTPUT_STREAM, streamReport );
 
-            exporter.exportReport(  );
-            byteArray = streamReport.toByteArray(  );
+            exporter.exportReport( );
+            byteArray = streamReport.toByteArray( );
         }
         catch ( Exception e )
         {
-            AppLogService.error( e );
+            AppLogService.error( e.getMessage( ), e );
+        }
+        finally
+        {
+            if ( connection != null )
+            {
+                if ( report != null )
+                {
+                    try
+                    {
+                        JasperConnectionService.getConnectionService( report.getPool( ) ).freeConnection( connection );
+                    }
+                    catch ( Exception ex )
+                    {
+                        AppLogService.error( ex.getMessage( ), ex );
+                        try
+                        {
+                            connection.close( );
+                        }
+                        catch ( SQLException s )
+                        {
+                            AppLogService.error( s.getMessage( ), s );
+                        }
+                    }
+                }
+                try
+                {
+                    connection.close( );
+                }
+                catch ( SQLException s )
+                {
+                    AppLogService.error( s.getMessage( ), s );
+                }
+            }
         }
 
         return byteArray;
@@ -123,13 +159,13 @@ public class PdfJasperRender implements ILinkJasperReport
         return strReportId + ".pdf";
     }
 
-    public String getFileType(  )
+    public String getFileType( )
     {
         return "pdf";
     }
 
     public JRExporter getExporter( HttpServletRequest request,
-        fr.paris.lutece.plugins.jasper.business.JasperReport report )
+            fr.paris.lutece.plugins.jasper.business.JasperReport report )
     {
         // TODO Auto-generated method stub
         return null;

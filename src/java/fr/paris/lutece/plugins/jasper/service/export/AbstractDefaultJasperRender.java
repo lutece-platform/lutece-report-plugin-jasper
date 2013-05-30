@@ -43,6 +43,15 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -50,17 +59,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
-
-import java.io.File;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, Cloneable
@@ -117,7 +115,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
         }
         catch ( Exception e )
         {
-            AppLogService.error( e );
+            AppLogService.error( e.getMessage( ), e );
         }
         finally
         {
@@ -131,26 +129,24 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
                     }
                     catch ( Exception e )
                     {
+                        AppLogService.error( e.getMessage( ), e );
                         try
                         {
                             conn.close(  );
                         }
                         catch ( SQLException s )
                         {
-                            AppLogService.error( s );
+                            AppLogService.error( s.getMessage( ), s );
                         }
                     }
                 }
-                else
+                try
                 {
-                    try
-                    {
-                        conn.close(  );
-                    }
-                    catch ( SQLException s )
-                    {
-                        AppLogService.error( s );
-                    }
+                    conn.close( );
+                }
+                catch ( SQLException s )
+                {
+                    AppLogService.error( s.getMessage( ), s );
                 }
             }
         }

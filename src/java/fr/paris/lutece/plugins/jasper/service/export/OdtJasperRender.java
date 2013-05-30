@@ -43,23 +43,23 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JRRtfExporter;
-import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
-import net.sf.jasperreports.engine.util.JRLoader;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 
 public class OdtJasperRender implements ILinkJasperReport, Cloneable
@@ -77,13 +77,14 @@ public class OdtJasperRender implements ILinkJasperReport, Cloneable
     {
         byte[] byteArray = new byte[1024];
 
+        Connection connection = null;
+        fr.paris.lutece.plugins.jasper.business.JasperReport report = null;
         try
         {
             Plugin plugin = PluginService.getPlugin( "jasper" );
 
             //get the report Id and construct the path to the corresponding jasper file
-            fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByPrimaryKey( strReportId,
-                    plugin );
+            report = JasperReportHome.findByPrimaryKey( strReportId, plugin );
             String strPageDesc = report.getUrl(  );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
             String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
@@ -99,9 +100,8 @@ public class OdtJasperRender implements ILinkJasperReport, Cloneable
             {
                 parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
             }
-
-            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,
-                    JasperConnectionService.getConnectionService( report.getPool(  ) ).getConnection(  ) );
+            connection = JasperConnectionService.getConnectionService( report.getPool( ) ).getConnection( );
+            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, connection );
 
             JROdtExporter exporter = new JROdtExporter(  );
 
@@ -114,7 +114,40 @@ public class OdtJasperRender implements ILinkJasperReport, Cloneable
         }
         catch ( Exception e )
         {
-            AppLogService.error( e );
+            AppLogService.error( e.getMessage( ), e );
+        }
+        finally
+        {
+            if ( connection != null )
+            {
+                if ( report != null )
+                {
+                    try
+                    {
+                        JasperConnectionService.getConnectionService( report.getPool( ) ).freeConnection( connection );
+                    }
+                    catch ( Exception ex )
+                    {
+                        AppLogService.error( ex.getMessage( ), ex );
+                        try
+                        {
+                            connection.close( );
+                        }
+                        catch ( SQLException s )
+                        {
+                            AppLogService.error( s.getMessage( ), s );
+                        }
+                    }
+                }
+                try
+                {
+                    connection.close( );
+                }
+                catch ( SQLException s )
+                {
+                    AppLogService.error( s.getMessage( ), s );
+                }
+            }
         }
 
         return byteArray;
