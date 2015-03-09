@@ -1,4 +1,3 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
@@ -56,10 +55,10 @@
             <artifactId>poi</artifactId>
             <version>3.6</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>4.5.0</version>
+            <version>6.0.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>eclipse</groupId>
@@ -71,9 +70,9 @@
     </dependencies>
 
     <properties>
-		<componentName>jasper</componentName>
-		<jiraProjectName>JASPER</jiraProjectName>
-		<jiraComponentId>10223</jiraComponentId>
+        <componentName>jasper</componentName>
+        <jiraProjectName>JASPER</jiraProjectName>
+        <jiraComponentId>10223</jiraComponentId>
     </properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-jasper</connection>

@@ -67,12 +67,20 @@ public class PdfJasperRender implements ILinkJasperReport
     private static final String PROPERTY_FILES_PATH = "jasper.files.path";
     private static final String PARAMETER_JASPER_VALUE = "value";
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String getLink( String strReportId )
     {
         //returns the link of the file pointing to the pdf file
         return "jsp/site/plugins/jasper/DownloadFile.jsp?report_type=pdf&report_id=" + strReportId;
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public byte[] getBuffer( String strReportId, HttpServletRequest request )
     {
         byte[] byteArray = new byte[1024];
@@ -92,7 +100,7 @@ public class PdfJasperRender implements ILinkJasperReport
 
             File reportFile = new File( strAbsolutePath );
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile.getPath( ) );
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
 
             Map parameters = new HashMap( );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
@@ -154,16 +162,28 @@ public class PdfJasperRender implements ILinkJasperReport
         return byteArray;
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String getFileName( String strReportId )
     {
         return strReportId + ".pdf";
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String getFileType( )
     {
         return "pdf";
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public JRExporter getExporter( HttpServletRequest request,
             fr.paris.lutece.plugins.jasper.business.JasperReport report )
     {

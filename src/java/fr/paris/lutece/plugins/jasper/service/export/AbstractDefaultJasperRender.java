@@ -69,6 +69,10 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     protected static final String PARAMETER_JASPER_VALUE = "value";
     protected static final String REGEX_ID = "^[\\d]+$";
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public byte[] getBuffer( String strReportId, HttpServletRequest request )
     {
         StringBuffer sb = new StringBuffer(  );
@@ -86,7 +90,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
 
             File reportFile = new File( strAbsolutePath );
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile.getPath(  ) );
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
             Map parameters = new HashMap(  );
 

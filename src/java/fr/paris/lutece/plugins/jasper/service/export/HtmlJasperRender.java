@@ -52,11 +52,19 @@ import javax.servlet.http.HttpServletRequest;
 
 public class HtmlJasperRender extends AbstractDefaultJasperRender
 {
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String getFileName( String strReportId )
     {
         return strReportId + ".html";
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String getLink( String strReportId )
     {
         return null;
@@ -82,11 +90,19 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public String getFileType(  )
     {
         return "html";
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public JRExporter getExporter( HttpServletRequest request,
         fr.paris.lutece.plugins.jasper.business.JasperReport report )
     {
