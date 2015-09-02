@@ -117,6 +117,18 @@ public enum JasperFileLinkService
 
         return buffer;
     }
+    
+    public static byte[] exportFile( String strJasperName, String strJasperType, HttpServletRequest request )
+    {
+        String strReportId = strJasperName;
+
+        byte[] buffer = new byte[1024];
+
+        FileTypeContext context = getFileTypeContext( strJasperType );
+        buffer = context.getBuffer( strReportId, request );
+
+        return buffer;
+    }
 
     /**
      *
