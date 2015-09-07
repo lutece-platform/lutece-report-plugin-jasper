@@ -137,11 +137,14 @@ public class XlsJasperRender implements ILinkJasperReport
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
 
             Map parameters = new HashMap(  );
-            List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
-
-            for ( int i = 0; i < listValues.size(  ); i++ )
+            if ( request != null )
             {
-                parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
+            	List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
+
+            	for ( int i = 0; i < listValues.size(  ); i++ )
+            	{
+            		parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
+            	}
             }
 
             connection = JasperConnectionService.getConnectionService( report.getPool( ) ).getConnection( );
