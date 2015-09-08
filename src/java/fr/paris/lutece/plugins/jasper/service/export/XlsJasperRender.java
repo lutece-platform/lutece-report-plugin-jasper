@@ -156,7 +156,7 @@ public class XlsJasperRender implements ILinkJasperReport
             exporter.setParameter( JRExporterParameter.JASPER_PRINT, jasperPrint );
             exporter.setParameter( JRExporterParameter.OUTPUT_STREAM, streamReport );
 
-            exporter.setParameter( JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE );
+            exporter.setParameter( JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE );
             exporter.setParameter( JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE );
 
             exporter.exportReport(  );
