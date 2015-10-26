@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.jasper.service;
 
+
 import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
 
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public enum JasperFileLinkService
     private static final String PARAMETER_REPORT_TYPE = "report_type";
     private static final String PARAMETER_DBPAGE = "dbpage";
     private static final String PARAMETER_JASPER_VALUE = "value";
+    private static final String PARAMETER_JASPER_LIST = "list";
     HashMap<String,ILinkJasperReport> mapStrategies;
 
     public static String getLink( String strReportId, String strType )
@@ -160,6 +162,22 @@ public enum JasperFileLinkService
             list.add( i, strValue );
             i++;
             strValue = request.getParameter( PARAMETER_JASPER_VALUE + ( i + 1 ) );
+        }
+
+        //Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
+        return list;
+    }
+    public List<String> getValuesElm( HttpServletRequest request )
+    {
+        List<String> list = new ArrayList<String>(  );
+        int i = 0;
+        String strValue = request.getParameter( PARAMETER_JASPER_LIST + ( i + 1 ) );
+
+        while ( strValue != null )
+        {
+            list.add( i, strValue );
+            i++;
+            strValue = request.getParameter( PARAMETER_JASPER_LIST + ( i + 1 ) );
         }
 
         //Collections.sort( list, String.CASE_INSENSITIVE_ORDER );

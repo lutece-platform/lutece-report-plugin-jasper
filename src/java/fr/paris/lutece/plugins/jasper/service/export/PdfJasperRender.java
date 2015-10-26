@@ -47,17 +47,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 
@@ -66,6 +69,8 @@ public class PdfJasperRender implements ILinkJasperReport
 {
     private static final String PROPERTY_FILES_PATH = "jasper.files.path";
     private static final String PARAMETER_JASPER_VALUE = "value";
+    private static final String SESSION_DATA_SOURCE = "dataSource";
+    
 
     /**
      * {@inheritDoc }
@@ -86,6 +91,11 @@ public class PdfJasperRender implements ILinkJasperReport
         byte[] byteArray = new byte[1024];
 
         Connection connection = null;
+        JRBeanCollectionDataSource dataSource = null;
+        HttpSession session = request.getSession( false );
+    	if ( session != null ){
+    		dataSource = (JRBeanCollectionDataSource)session.getAttribute(SESSION_DATA_SOURCE);
+    	}
         fr.paris.lutece.plugins.jasper.business.JasperReport report = null;
         try
         {
@@ -101,7 +111,7 @@ public class PdfJasperRender implements ILinkJasperReport
             File reportFile = new File( strAbsolutePath );
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
-
+    		
             Map parameters = new HashMap( );
             if ( request != null )
             {
@@ -111,9 +121,16 @@ public class PdfJasperRender implements ILinkJasperReport
             	{
             		parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ), listValues.get( i ) );
             	}
+            	
+            	
             }
-            connection = JasperConnectionService.getConnectionService( report.getPool( ) ).getConnection( );
-            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, connection );
+            JasperPrint jasperPrint = null;
+            if(dataSource == null){
+            	connection = JasperConnectionService.getConnectionService( report.getPool( ) ).getConnection( );
+                jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, connection );
+            }
+            else 
+            	jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,  dataSource ); 
 
             JRPdfExporter exporter = new JRPdfExporter( );
             ByteArrayOutputStream streamReport = new ByteArrayOutputStream( );
