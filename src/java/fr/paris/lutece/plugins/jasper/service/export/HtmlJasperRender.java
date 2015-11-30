@@ -33,34 +33,31 @@
  */
 package fr.paris.lutece.plugins.jasper.service.export;
 
-import fr.paris.lutece.plugins.jasper.service.JasperFileLinkService;
-import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
-
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
-
 import java.io.File;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fr.paris.lutece.plugins.jasper.service.JasperFileLinkService;
+import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.FileHtmlResourceHandler;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.engine.export.HtmlResourceHandler;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
+import net.sf.jasperreports.export.type.HtmlSizeUnitEnum;
 
+/**
+ * This class generate a Jasper report in HTML format
+ *
+ */
 public class HtmlJasperRender extends AbstractDefaultJasperRender
 {
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public String getFileName( String strReportId )
-    {
-        return strReportId + ".html";
-    }
-
+    private static final String FILE_TYPE = "html";
+    
     /**
      * {@inheritDoc }
      */
@@ -70,6 +67,10 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
         return null;
     }
 
+    /**
+     * Deletes the folder containing the images
+     * @param imageFolder the directory
+     */
     public static void delete( File imageFolder )
     {
         if ( imageFolder.exists(  ) )
@@ -96,42 +97,46 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
     @Override
     public String getFileType(  )
     {
-        return "html";
+        return FILE_TYPE;
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public JRExporter getExporter( HttpServletRequest request,
-        fr.paris.lutece.plugins.jasper.business.JasperReport report )
+    protected byte[] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report, JasperPrint jasperPrint ) throws JRException
     {
-        JRHtmlExporter exporter = new JRHtmlExporter(  );
-
-        Map imagesMap = new HashMap(  );
-        request.getSession(  ).setAttribute( "IMAGES_MAP", imagesMap );
-
-        exporter.setParameter( JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, false );
-        exporter.setParameter( JRHtmlExporterParameter.FRAMES_AS_NESTED_TABLES, false );
-        exporter.setParameter( JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false );
-        exporter.setParameter( JRHtmlExporterParameter.SIZE_UNIT, JRHtmlExporterParameter.SIZE_UNIT_PIXEL );
-
+        
+        HtmlExporter exporter = new HtmlExporter(  );
+        StringBuffer sb = new StringBuffer(  );
+        
+        SimpleHtmlReportConfiguration configuration = new SimpleHtmlReportConfiguration();
+        configuration.setWhitePageBackground( false );
+        configuration.setSizeUnit( HtmlSizeUnitEnum.PIXEL );
+        exporter.setConfiguration( configuration );
+        
         // Save image Map to file system
         String strImageFolderPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
         String strAbsoluteImagePath = AppPathService.getWebAppPath(  ) + strImageFolderPath + report.getUrl(  ) + "/" +
             JasperFileLinkService.INSTANCE.getKey( request );
         File imageFolder = new File( strAbsoluteImagePath );
-
-        if ( imageFolder.exists(  ) == false )
+        
+        if ( !imageFolder.exists(  ) )
         {
             imageFolder.mkdirs(  );
         }
-
-        exporter.setParameter( JRHtmlExporterParameter.IMAGES_DIR, imageFolder );
-        exporter.setParameter( JRHtmlExporterParameter.IMAGES_URI,
-            "plugins/jasper/images/" + report.getUrl(  ) + "/" + JasperFileLinkService.INSTANCE.getKey( request ) + "/" );
-        exporter.setParameter( JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, true );
-
-        return exporter;
-    }
+        
+        exporter.setExporterInput( new SimpleExporterInput( jasperPrint ) );
+        
+        SimpleHtmlExporterOutput exporterOutput = new SimpleHtmlExporterOutput( sb );
+        HtmlResourceHandler imageHandler = new FileHtmlResourceHandler( imageFolder );
+        exporterOutput.setImageHandler( imageHandler );
+        exporter.setExporterOutput( exporterOutput );
+        
+        exporter.exportReport(  );
+        
+        exporter.reset(  );
+        
+        return sb.toString(  ).getBytes(  );
+	}
 }
