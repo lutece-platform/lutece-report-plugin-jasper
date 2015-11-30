@@ -71,6 +71,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     protected static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
     protected static final String PROPERTY_EXPORT_CHARACTER_ENCODING = "jasper.export.characterEncoding";
     protected static final String PARAMETER_JASPER_VALUE = "value";
+    protected static final String PARAMETER_JASPER_IMAGE_DIRECTORY = "imageDirectory";
     protected static final String REGEX_ID = "^[\\d]+$";
     protected static final String PATH_SEPARATOR = "/";
     private static final String SESSION_DATA_SOURCE = "dataSource";
@@ -134,6 +135,11 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
                                                             : listValues.get( i ) );
             }
             
+            String strImageDirectoryPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
+            String strImageDirectoryAbsolutePath = new StringBuffer( AppPathService.getWebAppPath(  ) )
+                    .append( strImageDirectoryPath ).append( strReportId ).append( PATH_SEPARATOR).toString(  );
+            parameters.put( PARAMETER_JASPER_IMAGE_DIRECTORY, strImageDirectoryAbsolutePath );
+
             JasperPrint jasperPrint = null;
             if( dataSource == null )
             {
