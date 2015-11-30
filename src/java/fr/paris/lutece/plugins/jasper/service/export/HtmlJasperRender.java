@@ -57,6 +57,8 @@ import net.sf.jasperreports.export.type.HtmlSizeUnitEnum;
 public class HtmlJasperRender extends AbstractDefaultJasperRender
 {
     private static final String FILE_TYPE = "html";
+    private static final String SRC_TAG_IMAGE_PATH_PREFIX = "plugins/jasper/images/";
+    private static final String SRC_TAG_IMAGE_PATH_SUFFIX = "{0}";
     
     /**
      * {@inheritDoc }
@@ -117,8 +119,8 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
         
         // Save image Map to file system
         String strImageFolderPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-        String strAbsoluteImagePath = AppPathService.getWebAppPath(  ) + strImageFolderPath + report.getUrl(  ) + "/" +
-            JasperFileLinkService.INSTANCE.getKey( request );
+        String strAbsoluteImagePath = new StringBuffer( AppPathService.getWebAppPath(  ) )
+                .append( strImageFolderPath ).append( report.getUrl(  ) ).append( PATH_SEPARATOR ).append( JasperFileLinkService.INSTANCE.getKey( request ) ).toString(  );
         File imageFolder = new File( strAbsoluteImagePath );
         
         if ( !imageFolder.exists(  ) )
@@ -129,7 +131,8 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
         exporter.setExporterInput( new SimpleExporterInput( jasperPrint ) );
         
         SimpleHtmlExporterOutput exporterOutput = new SimpleHtmlExporterOutput( sb );
-        HtmlResourceHandler imageHandler = new FileHtmlResourceHandler( imageFolder );
+        HtmlResourceHandler imageHandler = new FileHtmlResourceHandler( imageFolder, new StringBuffer( SRC_TAG_IMAGE_PATH_PREFIX )
+                .append( report.getUrl(  ) ).append( PATH_SEPARATOR ).append( JasperFileLinkService.INSTANCE.getKey( request ) ).append( PATH_SEPARATOR ).append( SRC_TAG_IMAGE_PATH_SUFFIX ).toString(  ) );
         exporterOutput.setImageHandler( imageHandler );
         exporter.setExporterOutput( exporterOutput );
         

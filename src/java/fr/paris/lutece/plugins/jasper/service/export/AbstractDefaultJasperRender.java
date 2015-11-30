@@ -72,6 +72,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     protected static final String PROPERTY_EXPORT_CHARACTER_ENCODING = "jasper.export.characterEncoding";
     protected static final String PARAMETER_JASPER_VALUE = "value";
     protected static final String REGEX_ID = "^[\\d]+$";
+    protected static final String PATH_SEPARATOR = "/";
     private static final String SESSION_DATA_SOURCE = "dataSource";
     private static final String URL_PATTERN = "jsp/site/plugins/jasper/DownloadFile.jsp?report_type={0}&report_id={1}";
     private static final String FILE_EXTENSION_DELIMITER = ".";
@@ -132,7 +133,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
                     listValues.get( i ).matches( REGEX_ID ) ? Integer.parseInt( listValues.get( i ) )
                                                             : listValues.get( i ) );
             }
-
+            
             JasperPrint jasperPrint = null;
             if( dataSource == null )
             {
