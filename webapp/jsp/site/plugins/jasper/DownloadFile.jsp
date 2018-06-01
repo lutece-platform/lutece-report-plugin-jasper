@@ -1,3 +1,4 @@
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="fr.paris.lutece.portal.service.util.AppLogService"%>
 <%@ page import="fr.paris.lutece.plugins.jasper.service.JasperFileLinkService"%>
 <%
