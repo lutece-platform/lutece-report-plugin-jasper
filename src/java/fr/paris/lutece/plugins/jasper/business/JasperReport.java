@@ -43,7 +43,7 @@ public class JasperReport
 {
     // Variables declarations 
     private int _nIdReport;
-    private String _strDescription;
+    private String _strCode;
     private String _strUrl;
     private String _strPool;
     private String _strFileFolder;
@@ -69,21 +69,21 @@ public class JasperReport
     }
 
     /**
-     * Returns the Description
-     * @return The Description
+     * Returns the report code
+     * @return the report code
      */
-    public String getDescription(  )
+    public String getCode(  )
     {
-        return _strDescription;
+        return _strCode;
     }
 
     /**
-     * Sets the Description
-     * @param strDescription The Description
+     * Sets the report code
+     * @param strCode The Description
      */
-    public void setDescription( String strDescription )
+    public void setCode( String strCode )
     {
-        _strDescription = strDescription;
+        _strCode = strCode;
     }
 
     public String getFileFolder(  )

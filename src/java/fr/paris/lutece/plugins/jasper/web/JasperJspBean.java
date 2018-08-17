@@ -202,7 +202,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
         String strReportName = request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION );
         String strPoolName = request.getParameter( PARAMETER_REPORT_POOL );
         String strCleanReportName = UploadUtil.cleanFileName( strReportName );
-        jasperreport.setDescription( strReportName );
+        jasperreport.setCode( strReportName );
         jasperreport.setPool( strPoolName );
 
         FileItem fileItem = multipartRequest.getFile( PARAMETER_REPORT_TEMPLATE );
@@ -249,7 +249,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         //TODO remove appropriate folder
         JasperReport report = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
-        String strCleanReportName = UploadUtil.cleanFileName( report.getDescription(  ) );
+        String strCleanReportName = UploadUtil.cleanFileName( report.getCode(  ) );
 
         String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
         String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strCleanReportName;
@@ -293,8 +293,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
         JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
-        Map<String, ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes(  );
-        Collection<ILinkJasperReport> listFileTypes = mapClasses.values(  );
+        Collection<ILinkJasperReport> listFileTypes = ExportFormatService.INSTANCE.getExportTypes(  );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( MARK_JASPERREPORT, jasperreport );
@@ -330,7 +329,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        jasperreport.setDescription( request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION ) );
+        jasperreport.setCode( request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION ) );
         JasperReportHome.update( jasperreport, getPlugin(  ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;

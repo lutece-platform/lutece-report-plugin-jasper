@@ -47,12 +47,12 @@ public final class JasperReportDAO implements IJasperReportDAO
 {
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_report ) FROM jasper";
-    private static final String SQL_QUERY_SELECT = "SELECT id_report, description, url,pool,file_folder FROM jasper WHERE id_report = ?";
-    private static final String SQL_QUERY_SELECT_BY_DESC = "SELECT id_report, description, url, pool FROM jasper WHERE description = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO jasper ( id_report, description , url ,pool) VALUES ( ?, ? , ?,?) ";
+    private static final String SQL_QUERY_SELECT = "SELECT id_report, code, url,pool,file_folder FROM jasper WHERE id_report = ?";
+    private static final String SQL_QUERY_SELECT_BY_DESC = "SELECT id_report, code, url, pool FROM jasper WHERE code = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO jasper ( id_report, code , url ,pool) VALUES ( ?, ? , ?,?) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM jasper WHERE id_report = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE jasper SET id_report = ?, description = ? WHERE id_report = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_report, description, url,pool FROM jasper";
+    private static final String SQL_QUERY_UPDATE = "UPDATE jasper SET id_report = ?, code = ? WHERE id_report = ?";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_report, code, url,pool FROM jasper";
     private static final String SQL_QUERY_SELECT_FILE_FORMATS = "SELECT  file_format FROM jasper_file_format WHERE  id_report= ? ";
 
     /**
@@ -91,7 +91,7 @@ public final class JasperReportDAO implements IJasperReportDAO
         report.setIdReport( newPrimaryKey( plugin ) );
 
         daoUtil.setInt( 1, report.getIdReport(  ) );
-        daoUtil.setString( 2, report.getDescription(  ) );
+        daoUtil.setString( 2, report.getCode(  ) );
         daoUtil.setString( 3, report.getUrl(  ) );
         daoUtil.setString( 4, report.getPool(  ) );
 
@@ -118,7 +118,7 @@ public final class JasperReportDAO implements IJasperReportDAO
             report = new JasperReport(  );
 
             report.setIdReport( daoUtil.getInt( 1 ) );
-            report.setDescription( daoUtil.getString( 2 ) );
+            report.setCode( daoUtil.getString( 2 ) );
             report.setUrl( daoUtil.getString( 3 ) );
             report.setPool( daoUtil.getString( 4 ) );
             report.setFileFolder( daoUtil.getString( 5 ) );
@@ -177,7 +177,7 @@ public final class JasperReportDAO implements IJasperReportDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
 
         daoUtil.setInt( 1, report.getIdReport(  ) );
-        daoUtil.setString( 2, report.getDescription(  ) );
+        daoUtil.setString( 2, report.getCode(  ) );
         daoUtil.setInt( 3, report.getIdReport(  ) );
 
         daoUtil.executeUpdate(  );
@@ -200,7 +200,7 @@ public final class JasperReportDAO implements IJasperReportDAO
             JasperReport report = new JasperReport(  );
 
             report.setIdReport( daoUtil.getInt( 1 ) );
-            report.setDescription( daoUtil.getString( 2 ) );
+            report.setCode( daoUtil.getString( 2 ) );
             report.setUrl( daoUtil.getString( 3 ) );
             report.setPool( daoUtil.getString( 4 ) );
 
@@ -212,7 +212,7 @@ public final class JasperReportDAO implements IJasperReportDAO
         return reportList;
     }
 
-    public JasperReport load( String strKey, Plugin plugin )
+    public JasperReport loadByCode( String strKey, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_DESC, plugin );
         daoUtil.setString( 1, strKey );
@@ -225,7 +225,7 @@ public final class JasperReportDAO implements IJasperReportDAO
             report = new JasperReport(  );
 
             report.setIdReport( daoUtil.getInt( 1 ) );
-            report.setDescription( daoUtil.getString( 2 ) );
+            report.setCode( daoUtil.getString( 2 ) );
             report.setUrl( daoUtil.getString( 3 ) );
             report.setPool( daoUtil.getString( 4 ) );
         }

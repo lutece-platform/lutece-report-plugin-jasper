@@ -88,5 +88,5 @@ public interface IJasperReportDAO
      * @param plugin
      * @return
      */
-    JasperReport load( String strKey, Plugin plugin );
+    JasperReport loadByCode( String strKey, Plugin plugin );
 }

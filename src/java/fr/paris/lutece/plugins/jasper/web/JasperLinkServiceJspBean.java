@@ -78,8 +78,8 @@ public class JasperLinkServiceJspBean extends InsertServiceJspBean implements In
         ReferenceList reports = new ReferenceList(  );
         ReferenceList listFileTypes = new ReferenceList(  );
 
-        Map<String, ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes(  );
-        Collection<ILinkJasperReport> col = mapClasses.values(  );
+
+        Collection<ILinkJasperReport> col = ExportFormatService.INSTANCE.getExportTypes(  );
 
         for ( ILinkJasperReport renderFormat : col )
         {
@@ -90,7 +90,7 @@ public class JasperLinkServiceJspBean extends InsertServiceJspBean implements In
 
         for ( JasperReport report : reportsList )
         {
-            reports.addItem( report.getDescription(  ), report.getDescription(  ) );
+            reports.addItem( report.getCode(  ), report.getCode(  ) );
         }
 
         model.put( MARK_REPORTS, reports );

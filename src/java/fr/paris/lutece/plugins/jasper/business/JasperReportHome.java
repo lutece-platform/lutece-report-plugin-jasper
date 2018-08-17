@@ -117,12 +117,12 @@ public final class JasperReportHome
 
     /**
      *
-     * @param strKey
+     * @param strCode
      * @param plugin
      * @return
      */
-    public static JasperReport findByPrimaryKey( String strKey, Plugin plugin )
+    public static JasperReport findByCode( String strCode, Plugin plugin )
     {
-        return _dao.load( strKey, plugin );
+        return _dao.loadByCode( strCode, plugin );
     }
 }

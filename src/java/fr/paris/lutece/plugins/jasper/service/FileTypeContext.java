@@ -33,7 +33,11 @@
  */
 package fr.paris.lutece.plugins.jasper.service;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 
 public class FileTypeContext
@@ -55,6 +59,18 @@ public class FileTypeContext
     {
         return strategy.getBuffer( strReportId, request );
     }
+    
+    
+    public byte[] getBuffer( String strReportId,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+    {
+        return strategy.getBuffer(strReportId, dataSource, parameters, request);
+    }
+    
+    public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    {
+        return strategy.getBuffer(report, dataSource, parameters, request);
+    }
+
 
     public String getFileName( String strReportId )
     {

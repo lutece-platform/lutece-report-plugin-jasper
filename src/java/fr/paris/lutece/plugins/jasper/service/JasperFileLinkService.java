@@ -34,16 +34,17 @@
 package fr.paris.lutece.plugins.jasper.service;
 
 
-import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import fr.paris.lutece.plugins.jasper.business.JasperReport;
+import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 public enum JasperFileLinkService
 {
     /**
@@ -54,6 +55,7 @@ public enum JasperFileLinkService
      * Initialize the JasperFile link service
      *
      */
+    private static final String PARAMETER_REPORT_CODE = "report_code";
     private static final String PARAMETER_REPORT_ID = "report_id";
     private static final String PARAMETER_REPORT_TYPE = "report_type";
     private static final String PARAMETER_DBPAGE = "dbpage";
@@ -70,8 +72,7 @@ public enum JasperFileLinkService
 
     static FileTypeContext getFileTypeContext( String strType )
     {
-        Map<String, ILinkJasperReport> mapClasses = ExportFormatService.INSTANCE.getExportTypes(  );
-        Collection<ILinkJasperReport> col = mapClasses.values(  );
+        Collection<ILinkJasperReport> col =  ExportFormatService.INSTANCE.getExportTypes(  );
         FileTypeContext fileTypeContext = null;
 
         for ( ILinkJasperReport renderFormat : col )
@@ -98,27 +99,14 @@ public enum JasperFileLinkService
     {
         String strReportId = request.getParameter( PARAMETER_REPORT_ID );
         String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        FileTypeContext context = getFileTypeContext( strType );
-
-        byte[] buffer = new byte[1024];
-
-        buffer = context.getBuffer( strReportId, request );
-
-        return buffer;
+        return exportFile(strReportId, strType, request);
     }
 
     public static byte[] exportFile( HttpServletRequest request, String strJasperName )
     {
-        String strReportId = strJasperName;
-        String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-
-        byte[] buffer = new byte[1024];
-
-        FileTypeContext context = getFileTypeContext( strType );
-        buffer = context.getBuffer( strReportId, request );
-
-        return buffer;
-    }
+    	String strType = request.getParameter( PARAMETER_REPORT_TYPE );
+        return exportFile(strJasperName, strType, request);
+     }
     
     public static byte[] exportFile( String strJasperName, String strJasperType, HttpServletRequest request )
     {
@@ -129,6 +117,27 @@ public enum JasperFileLinkService
         FileTypeContext context = getFileTypeContext( strJasperType );
         buffer = context.getBuffer( strReportId, request );
 
+        return buffer;
+    }
+    
+    public static byte[] exportFile( String strJasperName, String strJasperType,JRBeanCollectionDataSource dataSource, HttpServletRequest request )
+    {
+        String strReportId = strJasperName;
+
+        byte[] buffer = new byte[1024];
+
+        FileTypeContext context = getFileTypeContext( strJasperType );
+        buffer = context.getBuffer( strReportId, request );
+
+        return buffer;
+    }
+    
+    public static byte[] exportFile( JasperReport report,String strJasperType, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    {
+       
+        byte[] buffer = new byte[1024];
+        FileTypeContext context = getFileTypeContext( strJasperType );
+        buffer = context.getBuffer(report, dataSource, parameters, request);
         return buffer;
     }
 

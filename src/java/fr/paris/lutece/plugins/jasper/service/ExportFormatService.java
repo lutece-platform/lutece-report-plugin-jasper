@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.jasper.service;
 
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 
@@ -59,19 +60,7 @@ public enum ExportFormatService
     private static final String DIR_PLUGINS = "plugins/";
     private static final String SUFFIX_CONTEXT_FILE = "_context.xml";
 
-    /**
-     * Fetched the subclasses of the section
-     * @param strContextName The context name
-     * @param classDef The class definition
-     * @return A map containing the beans
-     */
-    public static Map getListSubClasses( String strContextName, Class classDef )
-    {
-        ApplicationContext context = getContext( strContextName );
-
-        return context.getBeansOfType( classDef );
-    }
-
+   
     /**
      * Gets a Spring Application context from a given name
      * @param strContextName The context's name
@@ -140,8 +129,9 @@ public enum ExportFormatService
         return context;
     }
 
-    public Map<String,ILinkJasperReport> getExportTypes(  )
+    public List<ILinkJasperReport> getExportTypes(  )
     {
-        return getListSubClasses( "jasper", ILinkJasperReport.class );
-    }
+    	return  SpringContextService.getBeansOfType(ILinkJasperReport.class);
+        
+     }
 }
