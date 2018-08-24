@@ -85,7 +85,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
     // Parameters
     private static final String PARAMETER_JASPERREPORT_ID_REPORT = "jasperreport_id_report";
-    private static final String PARAMETER_JASPERREPORT_DESCRIPTION = "jasperreport_description";
+    private static final String PARAMETER_JASPERREPORT_CODE = "jasperreport_code";
     private static final String PARAMETER_REPORT_FILE_FOLDER = "file_folder";
     private static final String PARAMETER_REPORT_TEMPLATE = "report_template";
     private static final String PARAMETER_REPORT_POOL = "report_pool";
@@ -194,22 +194,22 @@ public class JasperJspBean extends PluginAdminPageJspBean
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         JasperReport jasperreport = new JasperReport(  );
 
-        if ( request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION ).equals( "" ) )
+        if ( request.getParameter( PARAMETER_JASPERREPORT_CODE ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        String strReportName = request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION );
+        String strReportCode = request.getParameter( PARAMETER_JASPERREPORT_CODE );
         String strPoolName = request.getParameter( PARAMETER_REPORT_POOL );
-        String strCleanReportName = UploadUtil.cleanFileName( strReportName );
-        jasperreport.setCode( strReportName );
+        String strCleanReportCode = UploadUtil.cleanFileName( strReportCode );
+        jasperreport.setCode( strCleanReportCode );
         jasperreport.setPool( strPoolName );
 
         FileItem fileItem = multipartRequest.getFile( PARAMETER_REPORT_TEMPLATE );
 
         try
         {
-            localTemplateFile( jasperreport, fileItem, strCleanReportName, true );
+            localTemplateFile( jasperreport, fileItem, strCleanReportCode, true );
         }
         catch ( IOException e )
         {
@@ -324,12 +324,12 @@ public class JasperJspBean extends PluginAdminPageJspBean
         int nIdReport = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
         jasperreport.setIdReport( nIdReport );
 
-        if ( request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION ).equals( "" ) )
+        if ( request.getParameter( PARAMETER_JASPERREPORT_CODE ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        jasperreport.setCode( request.getParameter( PARAMETER_JASPERREPORT_DESCRIPTION ) );
+        jasperreport.setCode( request.getParameter( PARAMETER_JASPERREPORT_CODE ) );
         JasperReportHome.update( jasperreport, getPlugin(  ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
@@ -370,22 +370,22 @@ public class JasperJspBean extends PluginAdminPageJspBean
      *
      * @param report
      * @param fileItem
-     * @param strReportName
+     * @param strReportCode
      * @param bUpdateJasper
      * @throws IOException
      */
-    private void localTemplateFile( JasperReport report, FileItem fileItem, String strReportName, boolean bUpdateJasper )
+    private void localTemplateFile( JasperReport report, FileItem fileItem, String strReportCode, boolean bUpdateJasper )
         throws IOException
     {
         String strFileName = fileItem.getName(  );
         File file = new File( strFileName );
 
-        if ( !file.getName(  ).equals( "" ) && !strReportName.equals( null ) )
+        if ( !file.getName(  ).equals( "" ) && !strReportCode.equals( null ) )
         {
             String strNameFile = file.getName(  );
 
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportName;
+            String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportCode;
             File folder = new File( strFolderPath );
 
             try
@@ -400,7 +400,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
                 AppLogService.error( e );
             }
 
-            String filePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportName + "/" + strNameFile;
+            String filePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportCode + "/" + strNameFile;
 
             if ( !new File( filePath ).isDirectory(  ) && bUpdateJasper )
             {
@@ -415,7 +415,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
                 fosFile.flush(  );
                 fosFile.write( fileItem.get(  ) );
                 fosFile.close(  );
-                report.setUrl( strReportName + "/" + strNameFile );
+                report.setUrl( strReportCode + "/" + strNameFile );
             }
         }
         else

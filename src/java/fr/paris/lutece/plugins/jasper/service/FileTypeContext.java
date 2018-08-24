@@ -50,20 +50,20 @@ public class FileTypeContext
         this.strategy = strategy;
     }
 
-    public String getFileLink( String strReportId )
+    public String getFileLink( String strReportCode)
     {
-        return strategy.getLink( strReportId );
+        return strategy.getLink( strReportCode );
     }
 
-    public byte[] getBuffer( String strReportId, HttpServletRequest request )
+    public byte[] getBuffer( String strReportCode, HttpServletRequest request )
     {
-        return strategy.getBuffer( strReportId, request );
+        return strategy.getBuffer( strReportCode, request );
     }
     
     
-    public byte[] getBuffer( String strReportId,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+    public byte[] getBuffer( String strReportCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
     {
-        return strategy.getBuffer(strReportId, dataSource, parameters, request);
+        return strategy.getBuffer(strReportCode, dataSource, parameters, request);
     }
     
     public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )

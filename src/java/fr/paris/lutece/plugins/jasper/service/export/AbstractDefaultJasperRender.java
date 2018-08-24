@@ -72,6 +72,9 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     protected static final String PROPERTY_EXPORT_CHARACTER_ENCODING = "jasper.export.characterEncoding";
     protected static final String PARAMETER_JASPER_VALUE = "value";
     protected static final String PARAMETER_JASPER_IMAGE_DIRECTORY = "imageDirectory";
+    protected static final String PARAMETER_JASPER_SUB_REPORT_DIRECTORY = "SUBREPORT_DIR";
+    
+    
     protected static final String REGEX_ID = "^[\\d]+$";
     protected static final String PATH_SEPARATOR = "/";
     private static final String SESSION_DATA_SOURCE = "dataSource";
@@ -91,9 +94,9 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
      * {@inheritDoc }
      */
     @Override
-    public String getFileName( String strReportId )
+    public String getFileName( String strReportCode )
     {
-        return strReportId + FILE_EXTENSION_DELIMITER + getFileType(  );
+        return strReportCode + FILE_EXTENSION_DELIMITER + getFileType(  );
     }
 
    
@@ -101,7 +104,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( String strReportId, HttpServletRequest request )
+    public byte[] getBuffer( String strCode, HttpServletRequest request )
     {
         Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
         JRBeanCollectionDataSource dataSource = null;
@@ -112,7 +115,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
         {
             dataSource = ( JRBeanCollectionDataSource )session.getAttribute( SESSION_DATA_SOURCE );
         }
-        report = JasperReportHome.findByCode( strReportId, plugin );
+        report = JasperReportHome.findByCode( strCode, plugin );
             List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
             Map<String, Object> parameters = new HashMap<String, Object>(  );
 
@@ -129,10 +132,10 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( String strReportId,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    public byte[] getBuffer( String strCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
     {
         Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
-        fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByCode( strReportId, plugin );
+        fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByCode( strCode, plugin );
         return getBuffer(report, dataSource, parameters, request);
     }
     /**
@@ -149,6 +152,9 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
             String strPageDesc = report.getUrl(  );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
             String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
+            
+            String strSubReportPath=AppPathService.getWebAppPath(  ) + strDirectoryPath  + report.getCode( ) +"/";
+            
 
             File reportFile = new File( strAbsolutePath );
 
@@ -159,7 +165,9 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
             String strImageDirectoryAbsolutePath = new StringBuffer( AppPathService.getWebAppPath(  ) )
                     .append( strImageDirectoryPath ).append( report.getCode( )).append( PATH_SEPARATOR).toString(  );
             parameters.put( PARAMETER_JASPER_IMAGE_DIRECTORY, strImageDirectoryAbsolutePath );
-
+            parameters.put( PARAMETER_JASPER_SUB_REPORT_DIRECTORY, strSubReportPath  );
+            
+            
             JasperPrint jasperPrint = null;
             if( dataSource == null )
             {
