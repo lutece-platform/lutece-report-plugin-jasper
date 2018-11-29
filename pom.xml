@@ -34,6 +34,10 @@
             <id>jasperreports</id>
             <url>http://jasperreports.sourceforge.net/maven2/plugin-jasper</url>
         </repository>
+        <repository>
+            <id>jaspersoft</id>
+            <url>http://jaspersoft.jfrog.io/jaspersoft/jr-ce-releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -74,6 +78,11 @@
 		    <version>6.0.0</version>
 		</dependency>
         
+        <dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports-functions</artifactId>
+		    <version>6.0.0</version>
+		</dependency>
     </dependencies>
 
     <properties>

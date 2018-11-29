@@ -37,6 +37,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 
@@ -63,10 +64,21 @@ public class FileTypeContext
     
     public byte[] getBuffer( String strReportCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
     {
-        return strategy.getBuffer(strReportCode, dataSource, parameters, request);
+        return getBuffer( strReportCode, (JRDataSource) dataSource,  parameters, request);
     }
     
     public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    {
+        return getBuffer(report, (JRDataSource)dataSource, parameters, request);
+    }
+    
+    
+    public byte[] getBuffer( String strReportCode,JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+    {
+        return strategy.getBuffer(strReportCode, dataSource, parameters, request);
+    }
+    
+    public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
     {
         return strategy.getBuffer(report, dataSource, parameters, request);
     }
