@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 public enum JasperFileLinkService
 {
@@ -121,6 +122,12 @@ public enum JasperFileLinkService
     
     public static byte[] exportFile( String strReportCode, String strJasperType,JRBeanCollectionDataSource dataSource, HttpServletRequest request )
     {
+		// We override the methods instead of replacing them to ensure binary compatibility
+        return exportFile( strReportCode, strJasperType, (JRDataSource)dataSource, request );
+    }
+    
+	public static byte[] exportFile( String strReportCode, String strJasperType,JRDataSource dataSource, HttpServletRequest request )
+    {
         
 
         byte[] buffer = new byte[1024];
@@ -132,6 +139,12 @@ public enum JasperFileLinkService
     }
     
     public static byte[] exportFile( JasperReport report,String strJasperType, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    {
+		// We override the methods instead of replacing them to ensure binary compatibility
+        return exportFile( report, strJasperType, (JRDataSource)dataSource,  parameters, request );
+    }
+    
+    public static byte[] exportFile( JasperReport report,String strJasperType, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
     {
        
         byte[] buffer = new byte[1024];
