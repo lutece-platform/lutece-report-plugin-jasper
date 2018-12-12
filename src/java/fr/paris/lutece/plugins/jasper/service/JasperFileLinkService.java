@@ -122,15 +122,11 @@ public enum JasperFileLinkService
     
     public static byte[] exportFile( String strReportCode, String strJasperType,JRBeanCollectionDataSource dataSource, HttpServletRequest request )
     {
+		// We override the methods instead of replacing them to ensure binary compatibility
         return exportFile( strReportCode, strJasperType, (JRDataSource)dataSource, request );
     }
     
-    public static byte[] exportFile( JasperReport report,String strJasperType, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
-    {
-		return exportFile( report, strJasperType, (JRDataSource)dataSource,  parameters, request );
-    }
-    
-    public static byte[] exportFile( String strReportCode, String strJasperType,JRDataSource dataSource, HttpServletRequest request )
+	public static byte[] exportFile( String strReportCode, String strJasperType,JRDataSource dataSource, HttpServletRequest request )
     {
         
 
@@ -140,6 +136,12 @@ public enum JasperFileLinkService
         buffer = context.getBuffer( strReportCode, request );
 
         return buffer;
+    }
+    
+    public static byte[] exportFile( JasperReport report,String strJasperType, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    {
+		// We override the methods instead of replacing them to ensure binary compatibility
+        return exportFile( report, strJasperType, (JRDataSource)dataSource,  parameters, request );
     }
     
     public static byte[] exportFile( JasperReport report,String strJasperType, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )

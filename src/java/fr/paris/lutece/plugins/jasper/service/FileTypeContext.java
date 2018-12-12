@@ -64,18 +64,20 @@ public class FileTypeContext
     
     public byte[] getBuffer( String strReportCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
     {
+        // We override the methods instead of replacing them to ensure binary compatibility
         return getBuffer( strReportCode, (JRDataSource) dataSource,  parameters, request);
     }
-    
-    public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
-    {
-        return getBuffer(report, (JRDataSource)dataSource, parameters, request);
-    }
-    
     
     public byte[] getBuffer( String strReportCode,JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
     {
         return strategy.getBuffer(strReportCode, dataSource, parameters, request);
+    }
+    
+    
+    public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    {
+        // We override the methods instead of replacing them to ensure binary compatibility
+        return getBuffer(report, (JRDataSource)dataSource, parameters, request);
     }
     
     public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )

@@ -1,2 +1,2 @@
 ALTER TABLE jasper
-CHANGE COLUMN description code varchar(50);
+CHANGE COLUMN old_column_name new_column_name data_type;

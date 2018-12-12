@@ -135,18 +135,9 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     @Override
     public byte[] getBuffer( String strCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
     {
-    	return getBuffer( strCode,(JRDataSource) dataSource, parameters, request );
+    	// We override the methods instead of replacing them to ensure binary compatibility
+        return getBuffer( strCode,(JRDataSource) dataSource, parameters, request );
     }
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public byte[] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
-    {
-    	return getBuffer( report, (JRDataSource) dataSource, parameters, request);
-    }
-    
-
     /**
      * {@inheritDoc }
      */
@@ -156,6 +147,17 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
         Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
         fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByCode( strCode, plugin );
         return getBuffer(report, dataSource, parameters, request);
+    }
+    
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public byte[] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+    {
+    	// We override the methods instead of replacing them to ensure binary compatibility
+        return getBuffer( report, (JRDataSource) dataSource, parameters, request);
     }
     /**
      * {@inheritDoc }
