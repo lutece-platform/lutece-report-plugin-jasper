@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,16 +64,17 @@ public class PdfJasperRender extends AbstractDefaultJasperRender
      * {@inheritDoc }
      */
     @Override
-    protected byte[] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report, JasperPrint jasperPrint ) throws JRException
+    protected byte [ ] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report, JasperPrint jasperPrint )
+            throws JRException
     {
-        
+
         JRPdfExporter exporter = new JRPdfExporter( );
         exporter.setExporterInput( new SimpleExporterInput( jasperPrint ) );
-        ByteArrayOutputStream streamReport = new ByteArrayOutputStream(  );
+        ByteArrayOutputStream streamReport = new ByteArrayOutputStream( );
         exporter.setExporterOutput( new SimpleOutputStreamExporterOutput( streamReport ) );
-        
+
         exporter.exportReport( );
-        
+
         return streamReport.toByteArray( );
-	}
+    }
 }

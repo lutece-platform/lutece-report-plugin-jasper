@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * This class provides Data Access methods for JasperReport objects
  */
@@ -57,32 +56,37 @@ public final class JasperReportDAO implements IJasperReportDAO
 
     /**
      * Generates a new primary key
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return The new primary key
      */
     public int newPrimaryKey( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         int nKey;
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // if the table is empty
             nKey = 1;
         }
 
         nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
 
     /**
      * Insert a new record in the table.
-     * @param report instance of the JasperReport object to insert
-     * @param plugin The plugin
+     * 
+     * @param report
+     *            instance of the JasperReport object to insert
+     * @param plugin
+     *            The plugin
      */
     public void insert( JasperReport report, Plugin plugin )
     {
@@ -90,32 +94,35 @@ public final class JasperReportDAO implements IJasperReportDAO
 
         report.setIdReport( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, report.getIdReport(  ) );
-        daoUtil.setString( 2, report.getCode(  ) );
-        daoUtil.setString( 3, report.getUrl(  ) );
-        daoUtil.setString( 4, report.getPool(  ) );
+        daoUtil.setInt( 1, report.getIdReport( ) );
+        daoUtil.setString( 2, report.getCode( ) );
+        daoUtil.setString( 3, report.getUrl( ) );
+        daoUtil.setString( 4, report.getPool( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Load the data of the report from the table
-     * @param nId The identifier of the report
-     * @param plugin The plugin
+     * 
+     * @param nId
+     *            The identifier of the report
+     * @param plugin
+     *            The plugin
      * @return the instance of the JasperReport
      */
     public JasperReport load( int nId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         JasperReport report = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            report = new JasperReport(  );
+            report = new JasperReport( );
 
             report.setIdReport( daoUtil.getInt( 1 ) );
             report.setCode( daoUtil.getString( 2 ) );
@@ -125,79 +132,90 @@ public final class JasperReportDAO implements IJasperReportDAO
             report.addFileFormats( loadFileFormats( nId, plugin ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return report;
     }
 
     /**
      * Load the file formats
-     * @param nId The identifier of the report
-     * @param plugin The plugin
+     * 
+     * @param nId
+     *            The identifier of the report
+     * @param plugin
+     *            The plugin
      * @return the list of file formats attached to the report
      */
     public ArrayList<String> loadFileFormats( int nId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILE_FORMATS, plugin );
         daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        ArrayList<String> listFileFormats = new ArrayList<String>(  );
+        ArrayList<String> listFileFormats = new ArrayList<String>( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             listFileFormats.add( daoUtil.getString( 1 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listFileFormats;
     }
 
     /**
      * Delete a record from the table
-     * @param nJasperReportId The identifier of the report
-     * @param plugin The plugin
+     * 
+     * @param nJasperReportId
+     *            The identifier of the report
+     * @param plugin
+     *            The plugin
      */
     public void delete( int nJasperReportId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
         daoUtil.setInt( 1, nJasperReportId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Update the record in the table
-     * @param report The reference of the report
-     * @param plugin The plugin
+     * 
+     * @param report
+     *            The reference of the report
+     * @param plugin
+     *            The plugin
      */
     public void store( JasperReport report, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
 
-        daoUtil.setInt( 1, report.getIdReport(  ) );
-        daoUtil.setString( 2, report.getCode(  ) );
-        daoUtil.setInt( 3, report.getIdReport(  ) );
+        daoUtil.setInt( 1, report.getIdReport( ) );
+        daoUtil.setString( 2, report.getCode( ) );
+        daoUtil.setInt( 3, report.getIdReport( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Load the data of all the reports and returns them as a collection
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return The Collection which contains the data of all the reports
      */
     public Collection<JasperReport> selectJasperReportsList( Plugin plugin )
     {
-        Collection<JasperReport> reportList = new ArrayList<JasperReport>(  );
+        Collection<JasperReport> reportList = new ArrayList<JasperReport>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            JasperReport report = new JasperReport(  );
+            JasperReport report = new JasperReport( );
 
             report.setIdReport( daoUtil.getInt( 1 ) );
             report.setCode( daoUtil.getString( 2 ) );
@@ -207,7 +225,7 @@ public final class JasperReportDAO implements IJasperReportDAO
             reportList.add( report );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return reportList;
     }
@@ -216,13 +234,13 @@ public final class JasperReportDAO implements IJasperReportDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_DESC, plugin );
         daoUtil.setString( 1, strKey );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         JasperReport report = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            report = new JasperReport(  );
+            report = new JasperReport( );
 
             report.setIdReport( daoUtil.getInt( 1 ) );
             report.setCode( daoUtil.getString( 2 ) );
@@ -230,7 +248,7 @@ public final class JasperReportDAO implements IJasperReportDAO
             report.setPool( daoUtil.getString( 4 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return report;
     }

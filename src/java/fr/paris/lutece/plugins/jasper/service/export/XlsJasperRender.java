@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.jasper.service.export;
 
-
 import java.io.ByteArrayOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +56,7 @@ public class XlsJasperRender extends AbstractDefaultJasperRender
      * {@inheritDoc }
      */
     @Override
-    public String getFileType(  )
+    public String getFileType( )
     {
         return FILE_TYPE;
     }
@@ -66,19 +65,19 @@ public class XlsJasperRender extends AbstractDefaultJasperRender
      * {@inheritDoc }
      */
     @Override
-    protected byte[] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report,
-            JasperPrint jasperPrint ) throws JRException
+    protected byte [ ] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report, JasperPrint jasperPrint )
+            throws JRException
     {
-        JRXlsExporter exporter = new JRXlsExporter(  );
-        SimpleXlsReportConfiguration exporterConfiguration = new SimpleXlsReportConfiguration(  );
+        JRXlsExporter exporter = new JRXlsExporter( );
+        SimpleXlsReportConfiguration exporterConfiguration = new SimpleXlsReportConfiguration( );
         exporterConfiguration.setOnePagePerSheet( Boolean.FALSE );
         exporterConfiguration.setDetectCellType( Boolean.TRUE );
         exporter.setExporterInput( new SimpleExporterInput( jasperPrint ) );
-        ByteArrayOutputStream streamReport = new ByteArrayOutputStream(  );
+        ByteArrayOutputStream streamReport = new ByteArrayOutputStream( );
         exporter.setExporterOutput( new SimpleOutputStreamExporterOutput( streamReport ) );
-        
-        exporter.exportReport(  );
-        
-        return streamReport.toByteArray(  );
-	}
+
+        exporter.exportReport( );
+
+        return streamReport.toByteArray( );
+    }
 }

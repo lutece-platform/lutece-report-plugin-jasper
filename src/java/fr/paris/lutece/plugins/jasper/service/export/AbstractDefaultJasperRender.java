@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,143 +67,141 @@ import net.sf.jasperreports.engine.util.JRLoader;
  */
 public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, Cloneable
 {
-	protected static final String PLUGIN_NAME = "jasper";
-	protected static final String PROPERTY_FILES_PATH = "jasper.files.path";
+    protected static final String PLUGIN_NAME = "jasper";
+    protected static final String PROPERTY_FILES_PATH = "jasper.files.path";
     protected static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
     protected static final String PROPERTY_EXPORT_CHARACTER_ENCODING = "jasper.export.characterEncoding";
     protected static final String PARAMETER_JASPER_VALUE = "value";
     protected static final String PARAMETER_JASPER_IMAGE_DIRECTORY = "imageDirectory";
     protected static final String PARAMETER_JASPER_SUB_REPORT_DIRECTORY = "SUBREPORT_DIR";
-    
-    
+
     protected static final String REGEX_ID = "^[\\d]+$";
     protected static final String PATH_SEPARATOR = "/";
     private static final String SESSION_DATA_SOURCE = "dataSource";
     private static final String URL_PATTERN = "jsp/site/plugins/jasper/DownloadFile.jsp?report_type={0}&report_id={1}";
     private static final String FILE_EXTENSION_DELIMITER = ".";
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public String getLink( String strReportId )
     {
-        return MessageFormat.format( URL_PATTERN, getFileType(  ), strReportId );
+        return MessageFormat.format( URL_PATTERN, getFileType( ), strReportId );
     }
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public String getFileName( String strReportCode )
     {
-        return strReportCode + FILE_EXTENSION_DELIMITER + getFileType(  );
+        return strReportCode + FILE_EXTENSION_DELIMITER + getFileType( );
     }
 
-   
     /**
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( String strCode, HttpServletRequest request )
+    public byte [ ] getBuffer( String strCode, HttpServletRequest request )
     {
         Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
         JRDataSource dataSource = null;
         fr.paris.lutece.plugins.jasper.business.JasperReport report = null;
         HttpSession session = request.getSession( false );
-    	
+
         if ( session != null )
         {
-            dataSource = ( JRDataSource )session.getAttribute( SESSION_DATA_SOURCE );
+            dataSource = (JRDataSource) session.getAttribute( SESSION_DATA_SOURCE );
         }
         report = JasperReportHome.findByCode( strCode, plugin );
-            List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
-            Map<String, Object> parameters = new HashMap<String, Object>(  );
+        List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
+        Map<String, Object> parameters = new HashMap<String, Object>( );
 
-            for ( int i = 0; i < listValues.size(  ); i++ )
-            {
-                parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ),
-                    listValues.get( i ).matches( REGEX_ID ) ? Integer.parseInt( listValues.get( i ) )
-                                                            : listValues.get( i ) );
-            }
-           
-            return getBuffer(report, dataSource, parameters, request);
+        for ( int i = 0; i < listValues.size( ); i++ )
+        {
+            parameters.put( PARAMETER_JASPER_VALUE + ( i + 1 ),
+                    listValues.get( i ).matches( REGEX_ID ) ? Integer.parseInt( listValues.get( i ) ) : listValues.get( i ) );
+        }
+
+        return getBuffer( report, dataSource, parameters, request );
     }
+
     /**
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( String strCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    public byte [ ] getBuffer( String strCode, JRBeanCollectionDataSource dataSource, Map<String, Object> parameters, HttpServletRequest request )
     {
-    	// We override the methods instead of replacing them to ensure binary compatibility
-        return getBuffer( strCode,(JRDataSource) dataSource, parameters, request );
+        // We override the methods instead of replacing them to ensure binary compatibility
+        return getBuffer( strCode, (JRDataSource) dataSource, parameters, request );
     }
+
     /**
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( String strCode,JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+    public byte [ ] getBuffer( String strCode, JRDataSource dataSource, Map<String, Object> parameters, HttpServletRequest request )
     {
         Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
         fr.paris.lutece.plugins.jasper.business.JasperReport report = JasperReportHome.findByCode( strCode, plugin );
-        return getBuffer(report, dataSource, parameters, request);
+        return getBuffer( report, dataSource, parameters, request );
     }
-    
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+    public byte [ ] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,
+            Map<String, Object> parameters, HttpServletRequest request )
     {
-    	// We override the methods instead of replacing them to ensure binary compatibility
-        return getBuffer( report, (JRDataSource) dataSource, parameters, request);
+        // We override the methods instead of replacing them to ensure binary compatibility
+        return getBuffer( report, (JRDataSource) dataSource, parameters, request );
     }
+
     /**
      * {@inheritDoc }
      */
     @Override
-    public byte[] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+    public byte [ ] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRDataSource dataSource, Map<String, Object> parameters,
+            HttpServletRequest request )
     {
-        byte[] byteArray = new byte[1024];
+        byte [ ] byteArray = new byte [ 1024];
         Connection connection = null;
-       try
+        try
         {
-            
-            String strPageDesc = report.getUrl(  );
+
+            String strPageDesc = report.getUrl( );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strAbsolutePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strPageDesc;
-            
-            String strSubReportPath=AppPathService.getWebAppPath(  ) + strDirectoryPath  + report.getCode( ) +"/";
-            
+            String strAbsolutePath = AppPathService.getWebAppPath( ) + strDirectoryPath + strPageDesc;
+
+            String strSubReportPath = AppPathService.getWebAppPath( ) + strDirectoryPath + report.getCode( ) + "/";
 
             File reportFile = new File( strAbsolutePath );
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
-           
-            
+
             String strImageDirectoryPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-            String strImageDirectoryAbsolutePath = new StringBuffer( AppPathService.getWebAppPath(  ) )
-                    .append( strImageDirectoryPath ).append( report.getCode( )).append( PATH_SEPARATOR).toString(  );
+            String strImageDirectoryAbsolutePath = new StringBuffer( AppPathService.getWebAppPath( ) ).append( strImageDirectoryPath )
+                    .append( report.getCode( ) ).append( PATH_SEPARATOR ).toString( );
             parameters.put( PARAMETER_JASPER_IMAGE_DIRECTORY, strImageDirectoryAbsolutePath );
-            parameters.put( PARAMETER_JASPER_SUB_REPORT_DIRECTORY, strSubReportPath  );
-            
-            
+            parameters.put( PARAMETER_JASPER_SUB_REPORT_DIRECTORY, strSubReportPath );
+
             JasperPrint jasperPrint = null;
-            if( dataSource == null )
+            if ( dataSource == null )
             {
                 connection = JasperConnectionService.getConnectionService( report.getPool( ) ).getConnection( );
                 jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, connection );
             }
             else
             {
-                jasperPrint = JasperFillManager.fillReport( jasperReport, parameters,  dataSource ); 
+                jasperPrint = JasperFillManager.fillReport( jasperReport, parameters, dataSource );
             }
-            
+
             byteArray = getData( request, report, jasperPrint );
 
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -215,16 +213,16 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
                 {
                     try
                     {
-                        JasperConnectionService.getConnectionService( report.getPool(  ) ).freeConnection( connection );
+                        JasperConnectionService.getConnectionService( report.getPool( ) ).freeConnection( connection );
                     }
-                    catch ( Exception e )
+                    catch( Exception e )
                     {
                         AppLogService.error( e.getMessage( ), e );
                         try
                         {
-                            connection.close(  );
+                            connection.close( );
                         }
-                        catch ( SQLException s )
+                        catch( SQLException s )
                         {
                             AppLogService.error( s.getMessage( ), s );
                         }
@@ -234,23 +232,29 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
                 {
                     connection.close( );
                 }
-                catch ( SQLException s )
+                catch( SQLException s )
                 {
                     AppLogService.error( s.getMessage( ), s );
                 }
             }
         }
-        
+
         return byteArray;
     }
-    
+
     /**
      * Gives data generated by Jasper
-     * @param request the request
-     * @param report the Jasper report
-     * @param jasperPrint the JasperPrint
+     * 
+     * @param request
+     *            the request
+     * @param report
+     *            the Jasper report
+     * @param jasperPrint
+     *            the JasperPrint
      * @return the data as array of bytes
-     * @throws JRException if there is an exception during the treatment
+     * @throws JRException
+     *             if there is an exception during the treatment
      */
-    protected abstract byte[] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report, JasperPrint jasperPrint ) throws JRException;
+    protected abstract byte [ ] getData( HttpServletRequest request, fr.paris.lutece.plugins.jasper.business.JasperReport report, JasperPrint jasperPrint )
+            throws JRException;
 }

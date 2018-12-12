@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,18 +52,20 @@ import java.util.Map;
  */
 @SuppressWarnings( "unchecked" )
 public enum ExportFormatService
-{INSTANCE;
+{
+    INSTANCE;
 
     private static final String CORE = "core";
-    private static Map<String,ApplicationContext> _mapContext = new HashMap<String,ApplicationContext>(  );
+    private static Map<String, ApplicationContext> _mapContext = new HashMap<String, ApplicationContext>( );
     private static final String PATH_CONF = "/WEB-INF/conf/";
     private static final String DIR_PLUGINS = "plugins/";
     private static final String SUFFIX_CONTEXT_FILE = "_context.xml";
 
-   
     /**
      * Gets a Spring Application context from a given name
-     * @param strContextName The context's name
+     * 
+     * @param strContextName
+     *            The context's name
      * @return The context
      */
     private static ApplicationContext getContext( String strContextName )
@@ -91,15 +93,15 @@ public enum ExportFormatService
                 }
                 else
                 {
-                    List<String> listModules = new ArrayList<String>(  );
+                    List<String> listModules = new ArrayList<String>( );
                     File dir = new File( strContextFilePath );
-                    String[] arrayFiles = dir.list(  );
+                    String [ ] arrayFiles = dir.list( );
 
                     if ( arrayFiles != null )
                     {
                         for ( int i = 0; i < arrayFiles.length; i++ )
                         {
-                            String strPath = arrayFiles[i];
+                            String strPath = arrayFiles [i];
 
                             if ( strPath.startsWith( strContextName ) && strPath.endsWith( "_context.xml" ) )
                             {
@@ -109,14 +111,14 @@ public enum ExportFormatService
                         }
                     }
 
-                    String[] arrayModules = new String[listModules.size(  )];
+                    String [ ] arrayModules = new String [ listModules.size( )];
                     listModules.toArray( arrayModules );
                     context = new FileSystemXmlApplicationContext( arrayModules );
                 }
             }
-            catch ( Exception e )
+            catch( Exception e )
             {
-                AppLogService.error( "Error retrieving context file : " + e.getMessage(  ), e );
+                AppLogService.error( "Error retrieving context file : " + e.getMessage( ), e );
             }
             finally
             {
@@ -129,9 +131,9 @@ public enum ExportFormatService
         return context;
     }
 
-    public List<ILinkJasperReport> getExportTypes(  )
+    public List<ILinkJasperReport> getExportTypes( )
     {
-    	return  SpringContextService.getBeansOfType(ILinkJasperReport.class);
-        
-     }
+        return SpringContextService.getBeansOfType( ILinkJasperReport.class );
+
+    }
 }

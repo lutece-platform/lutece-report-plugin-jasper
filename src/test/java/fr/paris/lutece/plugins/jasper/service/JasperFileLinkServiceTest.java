@@ -17,55 +17,52 @@ import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.test.LuteceTestCase;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-public class JasperFileLinkServiceTest extends LuteceTestCase {
+public class JasperFileLinkServiceTest extends LuteceTestCase
+{
     @Test
-    public void testExportFile() throws IOException {
-
-        JasperReport reportJRBeanCollection= new JasperReport();
-        
-        reportJRBeanCollection.setIdReport(1);
-        
-        
-        Properties propTest=getTestProperties( );
-        
-    
-        
-        
-        reportJRBeanCollection.setUrl(propTest.getProperty( "jasper.reportTestJRBeanUrl"));
-        reportJRBeanCollection.setCode(propTest.getProperty("jasper.reportTestJRBeanCode"));
-        reportJRBeanCollection.setDateModification( new java.sql.Timestamp(new Date().getTime()));
-        
-        
-        String reportType=propTest.getProperty( "jasper.reportTestGenerateType");
-        
-        List<TestJavaDataSource> listTestJavaData=new ArrayList<>();
-       
-        listTestJavaData.add(new TestJavaDataSource());
-        HashMap<String, Object> prop=new HashMap<>( );
-
-        
-        byte[] testExport=JasperFileLinkService.INSTANCE.exportFile(reportJRBeanCollection, reportType, new JRBeanCollectionDataSource( listTestJavaData ), new HashMap<String, Object>(), null);
-    
-        
-        
-        try{
-            File ff=new File(propTest.getProperty( "jasper.reportGenerateFilePath")); // définir l'arborescence
-            FileOutputStream sortie = new FileOutputStream(ff);
-            sortie.write(testExport);
-            sortie.close();
-            
-          } catch (Exception e) {}
-            
-    }
-    
-    
-    
-    private  Properties getTestProperties( )
+    public void testExportFile( ) throws IOException
     {
-      Properties properties = null;
+
+        JasperReport reportJRBeanCollection = new JasperReport( );
+
+        reportJRBeanCollection.setIdReport( 1 );
+
+        Properties propTest = getTestProperties( );
+
+        reportJRBeanCollection.setUrl( propTest.getProperty( "jasper.reportTestJRBeanUrl" ) );
+        reportJRBeanCollection.setCode( propTest.getProperty( "jasper.reportTestJRBeanCode" ) );
+        reportJRBeanCollection.setDateModification( new java.sql.Timestamp( new Date( ).getTime( ) ) );
+
+        String reportType = propTest.getProperty( "jasper.reportTestGenerateType" );
+
+        List<TestJavaDataSource> listTestJavaData = new ArrayList<>( );
+
+        listTestJavaData.add( new TestJavaDataSource( ) );
+        HashMap<String, Object> prop = new HashMap<>( );
+
+        byte [ ] testExport = JasperFileLinkService.INSTANCE.exportFile( reportJRBeanCollection, reportType,
+                new JRBeanCollectionDataSource( listTestJavaData ), new HashMap<String, Object>( ), null );
+
         try
         {
-            
+            File ff = new File( propTest.getProperty( "jasper.reportGenerateFilePath" ) ); // définir l'arborescence
+            FileOutputStream sortie = new FileOutputStream( ff );
+            sortie.write( testExport );
+            sortie.close( );
+
+        }
+        catch( Exception e )
+        {
+        }
+
+    }
+
+    private Properties getTestProperties( )
+    {
+        Properties properties = null;
+        try
+        {
+
             URL url = Thread.currentThread( ).getContextClassLoader( ).getResource( "jasper-test.properties" );
             FileInputStream file = new FileInputStream( url.getPath( ) );
 

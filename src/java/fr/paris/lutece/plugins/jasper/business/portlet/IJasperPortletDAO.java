@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,39 +36,47 @@ package fr.paris.lutece.plugins.jasper.business.portlet;
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 
-
 public interface IJasperPortletDAO extends IPortletInterfaceDAO
 {
     /**
      * Deletes record from table
-    
-     * @param nPortletId The indentifier of the Portlet
+     * 
+     * @param nPortletId
+     *            The indentifier of the Portlet
      */
     void delete( int nPortletId );
 
     /**
      * Inserts a new record in the table.
-     * @param portlet The Instance of the Portlet
+     * 
+     * @param portlet
+     *            The Instance of the Portlet
      */
     void insert( Portlet portlet );
 
     /**
      * Loads the data of dbpagePortlet from the table
-     * @param nIdPortlet The identifier of the portlet
+     * 
+     * @param nIdPortlet
+     *            The identifier of the portlet
      * @return portlet The instance of the object portlet
      */
     Portlet load( int nIdPortlet );
 
     /**
      * Updates the record in the table
-     * @param portlet The reference of the portlet
+     * 
+     * @param portlet
+     *            The reference of the portlet
      */
     void store( Portlet portlet );
 
     /**
      * Checks if a feed is linked to a portlet
+     * 
      * @return A boolean
-     * @param nIdJasperFeed The identifier of the Jasper feed
+     * @param nIdJasperFeed
+     *            The identifier of the Jasper feed
      */
     boolean checkNoPortletLinked( int nIdJasperFeed );
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,49 +37,62 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.Collection;
 
-
 /**
-* IJasperReportDAO Interface
-*/
+ * IJasperReportDAO Interface
+ */
 public interface IJasperReportDAO
 {
     /**
      * Insert a new record in the table.
-     * @param jasperReport instance of the JasperReport object to inssert
-     * @param plugin the Plugin
+     * 
+     * @param jasperReport
+     *            instance of the JasperReport object to inssert
+     * @param plugin
+     *            the Plugin
      */
     void insert( JasperReport jasperReport, Plugin plugin );
 
     /**
-    * Update the record in the table
-    * @param jasperReport the reference of the JasperReport
-    * @param plugin the Plugin
-    */
+     * Update the record in the table
+     * 
+     * @param jasperReport
+     *            the reference of the JasperReport
+     * @param plugin
+     *            the Plugin
+     */
     void store( JasperReport jasperReport, Plugin plugin );
 
     /**
      * Delete a record from the table
-     * @param nIdJasperReport int identifier of the JasperReport to delete
-     * @param plugin the Plugin
+     * 
+     * @param nIdJasperReport
+     *            int identifier of the JasperReport to delete
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nIdJasperReport, Plugin plugin );
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // Finders
 
     /**
      * Load the data from the table
-     * @param strId The identifier of the jasperReport
-     * @param plugin the Plugin
+     * 
+     * @param strId
+     *            The identifier of the jasperReport
+     * @param plugin
+     *            the Plugin
      * @return The instance of the jasperReport
      */
     JasperReport load( int nKey, Plugin plugin );
 
     /**
-    * Load the data of all the jasperReport objects and returns them as a collection
-    * @param plugin the Plugin
-    * @return The collection which contains the data of all the jasperReport objects
-    */
+     * Load the data of all the jasperReport objects and returns them as a collection
+     * 
+     * @param plugin
+     *            the Plugin
+     * @return The collection which contains the data of all the jasperReport objects
+     */
     Collection<JasperReport> selectJasperReportsList( Plugin plugin );
 
     /**

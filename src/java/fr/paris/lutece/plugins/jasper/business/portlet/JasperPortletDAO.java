@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,13 +36,12 @@ package fr.paris.lutece.plugins.jasper.business.portlet;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.util.sql.DAOUtil;
 
-
 /**
  * this class provides Data Access methods for JasperPortlet objects
  */
 public final class JasperPortletDAO implements IJasperPortletDAO
 {
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String SQL_QUERY_SELECT = "SELECT id_portlet, jasper_feed_id FROM jasper_portlet WHERE id_portlet = ? ";
     private static final String SQL_QUERY_INSERT = "INSERT INTO jasper_portlet ( id_portlet, jasper_feed_id ) VALUES ( ?, ? )";
@@ -50,96 +49,103 @@ public final class JasperPortletDAO implements IJasperPortletDAO
     private static final String SQL_QUERY_UPDATE = "UPDATE jasper_portlet SET id_portlet = ?, jasper_feed_id = ? WHERE id_portlet = ? ";
     private static final String SQL_QUERY_CHECK_PORTLET_LINKED = "SELECT jasper_feed_id FROM jasper_portlet WHERE jasper_feed_id = ? ";
 
-    ///////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////
     // Access methods to data
 
     /**
      * Insert a new record in the table.
      *
-     * @param portlet The Instance of the Portlet
+     * @param portlet
+     *            The Instance of the Portlet
      */
     public void insert( Portlet portlet )
     {
         JasperPortlet p = (JasperPortlet) portlet;
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT );
-        daoUtil.setInt( 1, p.getId(  ) );
-        daoUtil.setString( 2, p.getJasperFeedId(  ) );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.setInt( 1, p.getId( ) );
+        daoUtil.setString( 2, p.getJasperFeedId( ) );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Delete record from table
      *
-     * @param nPortletId The indentifier of the Portlet
+     * @param nPortletId
+     *            The indentifier of the Portlet
      */
     public void delete( int nPortletId )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
         daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Update the record in the table
      *
-     * @param portlet The reference of the portlet
+     * @param portlet
+     *            The reference of the portlet
      */
     public void store( Portlet portlet )
     {
         JasperPortlet p = (JasperPortlet) portlet;
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE );
-        daoUtil.setInt( 1, p.getId(  ) );
-        daoUtil.setString( 2, p.getJasperFeedId(  ) );
-        daoUtil.setInt( 3, p.getId(  ) );
+        daoUtil.setInt( 1, p.getId( ) );
+        daoUtil.setString( 2, p.getJasperFeedId( ) );
+        daoUtil.setInt( 3, p.getId( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * load the data of dbpagePortlet from the table
+     * 
      * @return portlet The instance of the object portlet
-     * @param nIdPortlet The identifier of the portlet
+     * @param nIdPortlet
+     *            The identifier of the portlet
      */
     public Portlet load( int nIdPortlet )
     {
-        JasperPortlet portlet = new JasperPortlet(  );
+        JasperPortlet portlet = new JasperPortlet( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
         daoUtil.setInt( 1, nIdPortlet );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
             portlet.setId( daoUtil.getInt( 1 ) );
             portlet.setJasperFeedId( daoUtil.getString( 2 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return portlet;
     }
 
     /**
      * Checks if a feed is linked to a portlet
+     * 
      * @return A boolean
-     * @param nIdJasperFeed The identifier of the Jasper feed
+     * @param nIdJasperFeed
+     *            The identifier of the Jasper feed
      */
     public boolean checkNoPortletLinked( int nIdJasperFeed )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PORTLET_LINKED );
         daoUtil.setInt( 1, nIdJasperFeed );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            daoUtil.free(  );
+            daoUtil.free( );
 
             return false;
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return true;
     }

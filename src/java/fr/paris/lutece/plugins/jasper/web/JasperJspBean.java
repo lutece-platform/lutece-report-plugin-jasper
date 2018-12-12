@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,14 +70,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
- * This class provides the user interface to manage  JasperReport
- * features ( manage, create, modify, remove )
+ * This class provides the user interface to manage JasperReport features ( manage, create, modify, remove )
  */
 public class JasperJspBean extends PluginAdminPageJspBean
 {
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
     // Constants
 
     // Right
@@ -124,7 +122,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
     // Messages
     private static final String MESSAGE_CONFIRM_REMOVE_JASPERREPORT = "jasper.message.confirmRemoveJasperReport";
 
-    //Variables
+    // Variables
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
     private int _nItemsPerPage;
@@ -132,7 +130,8 @@ public class JasperJspBean extends PluginAdminPageJspBean
     /**
      * Returns the list of jasperreport
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the jasperreports list
      */
     public String getManageJasperReports( HttpServletRequest request )
@@ -141,58 +140,58 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_DEFAULT_LIST_JASPERREPORT_PER_PAGE, 50 );
-        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
-                _nDefaultItemsPerPage );
+        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage, _nDefaultItemsPerPage );
 
         UrlItem url = new UrlItem( JSP_MANAGE_JASPERREPORTS );
-        String strUrl = url.getUrl(  );
-        Collection<JasperReport> listReports = JasperReportHome.getJasperReportsList( getPlugin(  ) );
-        Paginator paginator = new Paginator( (List<JasperReport>) listReports, _nItemsPerPage, strUrl,
-                PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
+        String strUrl = url.getUrl( );
+        Collection<JasperReport> listReports = JasperReportHome.getJasperReportsList( getPlugin( ) );
+        Paginator paginator = new Paginator( (List<JasperReport>) listReports, _nItemsPerPage, strUrl, PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
         model.put( MARK_NB_ITEMS_PER_PAGE, "" + _nItemsPerPage );
         model.put( MARK_PAGINATOR, paginator );
-        model.put( MARK_JASPERREPORT_LIST, paginator.getPageItems(  ) );
+        model.put( MARK_JASPERREPORT_LIST, paginator.getPageItems( ) );
 
-        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_JASPERREPORTS, getLocale(  ), model );
+        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_JASPERREPORTS, getLocale( ), model );
 
-        return getAdminPage( templateList.getHtml(  ) );
+        return getAdminPage( templateList.getHtml( ) );
     }
 
     /**
      * Returns the form to create a jasperreport
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code of the jasperreport form
      */
     public String getCreateJasperReport( HttpServletRequest request )
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_JASPERREPORT );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
-        ReferenceList listPools = new ReferenceList(  );
+        ReferenceList listPools = new ReferenceList( );
         AppConnectionService.getPoolList( listPools );
 
         model.put( MARK_SECTION_POOL_LIST, listPools );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_JASPERREPORT, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_JASPERREPORT, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process the data capture form of a new jasperreport
      *
-     * @param request The Http Request
+     * @param request
+     *            The Http Request
      * @return The Jsp URL of the process result
      */
     public String doCreateJasperReport( HttpServletRequest request )
     {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        JasperReport jasperreport = new JasperReport(  );
+        JasperReport jasperreport = new JasperReport( );
 
         if ( request.getParameter( PARAMETER_JASPERREPORT_CODE ).equals( "" ) )
         {
@@ -211,12 +210,12 @@ public class JasperJspBean extends PluginAdminPageJspBean
         {
             localTemplateFile( jasperreport, fileItem, strCleanReportCode, true );
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
             AppLogService.error( e );
         }
 
-        JasperReportHome.create( jasperreport, getPlugin(  ) );
+        JasperReportHome.create( jasperreport, getPlugin( ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
     }
@@ -224,7 +223,8 @@ public class JasperJspBean extends PluginAdminPageJspBean
     /**
      * Manages the removal form of a jasperreport whose identifier is in the http request
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getConfirmRemoveJasperReport( HttpServletRequest request )
@@ -233,29 +233,29 @@ public class JasperJspBean extends PluginAdminPageJspBean
         UrlItem url = new UrlItem( JSP_DO_REMOVE_JASPERREPORT );
         url.addParameter( PARAMETER_JASPERREPORT_ID_REPORT, nId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_JASPERREPORT, url.getUrl(  ),
-            AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_JASPERREPORT, url.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Handles the removal form of a jasperreport
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage jasperreports
      */
     public String doRemoveJasperReport( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
 
-        //TODO remove appropriate folder
-        JasperReport report = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
-        String strCleanReportName = UploadUtil.cleanFileName( report.getCode(  ) );
+        // TODO remove appropriate folder
+        JasperReport report = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
+        String strCleanReportName = UploadUtil.cleanFileName( report.getCode( ) );
 
         String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-        String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strCleanReportName;
+        String strFolderPath = AppPathService.getWebAppPath( ) + strDirectoryPath + strCleanReportName;
         File folder = new File( strFolderPath );
         deleteFolderWithContent( folder );
-        JasperReportHome.remove( nId, getPlugin(  ) );
+        JasperReportHome.remove( nId, getPlugin( ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
     }
@@ -263,7 +263,8 @@ public class JasperJspBean extends PluginAdminPageJspBean
     /**
      * Returns the form to update info about a jasperreport
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The HTML form to update info
      */
     public String getModifyJasperReport( HttpServletRequest request )
@@ -271,20 +272,21 @@ public class JasperJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_JASPERREPORT );
 
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
+        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_JASPERREPORT, jasperreport );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_JASPERREPORT, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_JASPERREPORT, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Returns the fiule type selection for generation
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The HTML form to update info
      */
     public String getManageFileTypes( HttpServletRequest request )
@@ -292,29 +294,30 @@ public class JasperJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_REPORT_FILE_TYPES );
 
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
-        Collection<ILinkJasperReport> listFileTypes = ExportFormatService.INSTANCE.getExportTypes(  );
+        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
+        Collection<ILinkJasperReport> listFileTypes = ExportFormatService.INSTANCE.getExportTypes( );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_JASPERREPORT, jasperreport );
         model.put( MARK_FILE_TYPES, listFileTypes );
-        model.put( MARK_GENERATED_FILE_TYPES, jasperreport.getFileFormats(  ) );
+        model.put( MARK_GENERATED_FILE_TYPES, jasperreport.getFileFormats( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_REPORT_FILE_TYPES, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_REPORT_FILE_TYPES, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process the change form of a jasperreport
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
      */
     public String doModifyJasperReport( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
+        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
 
         if ( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ).equals( "" ) )
         {
@@ -330,7 +333,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
         }
 
         jasperreport.setCode( request.getParameter( PARAMETER_JASPERREPORT_CODE ) );
-        JasperReportHome.update( jasperreport, getPlugin(  ) );
+        JasperReportHome.update( jasperreport, getPlugin( ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
     }
@@ -338,13 +341,14 @@ public class JasperJspBean extends PluginAdminPageJspBean
     /**
      * Process the change form of a jasperreport
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
      */
     public String doModifyReportFileTypes( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin(  ) );
+        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
 
         if ( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ).equals( "" ) )
         {
@@ -360,8 +364,8 @@ public class JasperJspBean extends PluginAdminPageJspBean
         }
 
         jasperreport.setFileFolder( request.getParameter( PARAMETER_REPORT_FILE_FOLDER ) );
-        //TODO Important To change file types
-        JasperReportHome.update( jasperreport, getPlugin(  ) );
+        // TODO Important To change file types
+        JasperReportHome.update( jasperreport, getPlugin( ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
     }
@@ -374,47 +378,46 @@ public class JasperJspBean extends PluginAdminPageJspBean
      * @param bUpdateJasper
      * @throws IOException
      */
-    private void localTemplateFile( JasperReport report, FileItem fileItem, String strReportCode, boolean bUpdateJasper )
-        throws IOException
+    private void localTemplateFile( JasperReport report, FileItem fileItem, String strReportCode, boolean bUpdateJasper ) throws IOException
     {
-        String strFileName = fileItem.getName(  );
+        String strFileName = fileItem.getName( );
         File file = new File( strFileName );
 
-        if ( !file.getName(  ).equals( "" ) && !strReportCode.equals( null ) )
+        if ( !file.getName( ).equals( "" ) && !strReportCode.equals( null ) )
         {
-            String strNameFile = file.getName(  );
+            String strNameFile = file.getName( );
 
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strFolderPath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportCode;
+            String strFolderPath = AppPathService.getWebAppPath( ) + strDirectoryPath + strReportCode;
             File folder = new File( strFolderPath );
 
             try
             {
-                if ( !folder.exists(  ) )
+                if ( !folder.exists( ) )
                 {
-                    folder.mkdir(  );
+                    folder.mkdir( );
                 }
             }
-            catch ( Exception e )
+            catch( Exception e )
             {
                 AppLogService.error( e );
             }
 
-            String filePath = AppPathService.getWebAppPath(  ) + strDirectoryPath + strReportCode + "/" + strNameFile;
+            String filePath = AppPathService.getWebAppPath( ) + strDirectoryPath + strReportCode + "/" + strNameFile;
 
-            if ( !new File( filePath ).isDirectory(  ) && bUpdateJasper )
+            if ( !new File( filePath ).isDirectory( ) && bUpdateJasper )
             {
                 file = new File( filePath );
 
-                if ( file.exists(  ) )
+                if ( file.exists( ) )
                 {
-                    file.delete(  );
+                    file.delete( );
                 }
 
                 FileOutputStream fosFile = new FileOutputStream( file );
-                fosFile.flush(  );
-                fosFile.write( fileItem.get(  ) );
-                fosFile.close(  );
+                fosFile.flush( );
+                fosFile.write( fileItem.get( ) );
+                fosFile.close( );
                 report.setUrl( strReportCode + "/" + strNameFile );
             }
         }
@@ -426,13 +429,13 @@ public class JasperJspBean extends PluginAdminPageJspBean
 
     public static boolean deleteFolderWithContent( File folder )
     {
-        if ( folder.isDirectory(  ) )
+        if ( folder.isDirectory( ) )
         {
-            String[] files = folder.list(  );
+            String [ ] files = folder.list( );
 
             for ( int i = 0; i < files.length; i++ )
             {
-                boolean success = deleteFolderWithContent( new File( folder, files[i] ) );
+                boolean success = deleteFolderWithContent( new File( folder, files [i] ) );
 
                 if ( !success )
                 {
@@ -441,6 +444,6 @@ public class JasperJspBean extends PluginAdminPageJspBean
             }
         }
 
-        return folder.delete(  );
+        return folder.delete( );
     }
 }

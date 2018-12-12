@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,13 +45,12 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * This class provides the user interface to manage Jasper Portlet features
  */
 public class JasperPortletJspBean extends PortletJspBean
 {
-    ///////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////
     // Constants
 
     /**
@@ -59,7 +58,7 @@ public class JasperPortletJspBean extends PortletJspBean
      */
     public static final String RIGHT_MANAGE_ADMIN_SITE = "CORE_ADMIN_SITE";
 
-    ////////////////////////////////
+    // //////////////////////////////
     private static final String PARAMETER_PAGE_ID = "page_id";
     private static final String PARAMETER_PORTLET_ID = "portlet_id";
     private static final String PARAMETER_PORTLET_TYPE_ID = "portlet_type_id";
@@ -68,8 +67,8 @@ public class JasperPortletJspBean extends PortletJspBean
     private static final String MARK_FEED_LIST = "feed_list";
     private static final String MARK_FEED_ID = "default_feed_id";
 
-    //////////////////////////////////////////////////////////////////////////////////
-    //Templates
+    // ////////////////////////////////////////////////////////////////////////////////
+    // Templates
     private static final String TEMPLATE_COMBO_FEEDS = "admin/plugins/jasper/portlet/combo_feed_jasper.html";
 
     /**
@@ -77,7 +76,7 @@ public class JasperPortletJspBean extends PortletJspBean
      *
      * @return the value of the property prefix
      */
-    public String getPropertiesPrefix(  )
+    public String getPropertiesPrefix( )
     {
         return "portlet.jasper";
     }
@@ -85,7 +84,8 @@ public class JasperPortletJspBean extends PortletJspBean
     /**
      * Returns the Jasper Portlet form of creation
      *
-     * @param request The Http rquest
+     * @param request
+     *            The Http rquest
      * @return the html code of the jasper portlet form
      */
     public String getCreate( HttpServletRequest request )
@@ -93,16 +93,18 @@ public class JasperPortletJspBean extends PortletJspBean
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
         HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId );
-        ReferenceList listFeeds = getDummyList(  );
+        ReferenceList listFeeds = getDummyList( );
         String strHtmlCombo = getFeedIndexCombo( listFeeds, "" );
         template.substitute( COMBO_FEED_LIST, strHtmlCombo );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Returns the Jasper Portlet form for update
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code of the jasper portlet form
      */
     public String getModify( HttpServletRequest request )
@@ -113,22 +115,23 @@ public class JasperPortletJspBean extends PortletJspBean
         HtmlTemplate template = getModifyTemplate( portlet );
 
         // fills the template with specific values
-        ReferenceList listFeeds = getDummyList(  );
-        String strHtmlCombo = getFeedIndexCombo( listFeeds, portlet.getJasperFeedId(  ) );
+        ReferenceList listFeeds = getDummyList( );
+        String strHtmlCombo = getFeedIndexCombo( listFeeds, portlet.getJasperFeedId( ) );
         template.substitute( COMBO_FEED_LIST, strHtmlCombo );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Treats the creation form of a new jasper portlet
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the view of the created jasper portlet
      */
     public String doCreate( HttpServletRequest request )
     {
-        JasperPortlet portlet = new JasperPortlet(  );
+        JasperPortlet portlet = new JasperPortlet( );
 
         // recovers portlet specific attributes
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
@@ -147,16 +150,17 @@ public class JasperPortletJspBean extends PortletJspBean
         portlet.setJasperFeedId( strFeedId );
 
         // Creates the portlet
-        JasperPortletHome.getInstance(  ).create( portlet );
+        JasperPortletHome.getInstance( ).create( portlet );
 
-        //Displays the page with the new Portlet
+        // Displays the page with the new Portlet
         return getPageUrl( nPageId );
     }
 
     /**
      * Treats the update form of the jasper portlet whose identifier is in the http request
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the view of the updated portlet
      */
     public String doModify( HttpServletRequest request )
@@ -179,33 +183,36 @@ public class JasperPortletJspBean extends PortletJspBean
         portlet.setJasperFeedId( strFeedId );
 
         // updates the portlet
-        portlet.update(  );
+        portlet.update( );
 
         // displays the page with the updated portlet
-        return getPageUrl( portlet.getPageId(  ) );
+        return getPageUrl( portlet.getPageId( ) );
     }
 
     /**
      * Return the feed listing depending on rights
-     * @param listFeeds list of available jasper feeds
-     * @param strDefaultFeedId The id of the feed used in the context
+     * 
+     * @param listFeeds
+     *            list of available jasper feeds
+     * @param strDefaultFeedId
+     *            The id of the feed used in the context
      * @return The html code of the combo
      */
     String getFeedIndexCombo( ReferenceList listFeeds, String strDefaultFeedId )
     {
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_FEED_LIST, listFeeds );
         model.put( MARK_FEED_ID, strDefaultFeedId );
 
-        HtmlTemplate templateCombo = AppTemplateService.getTemplate( TEMPLATE_COMBO_FEEDS, getLocale(  ), model );
+        HtmlTemplate templateCombo = AppTemplateService.getTemplate( TEMPLATE_COMBO_FEEDS, getLocale( ), model );
 
-        return templateCombo.getHtml(  );
+        return templateCombo.getHtml( );
     }
 
-    //In a real case this method should be collecting Data from a Home
-    ReferenceList getDummyList(  )
+    // In a real case this method should be collecting Data from a Home
+    ReferenceList getDummyList( )
     {
-        ReferenceList list = new ReferenceList(  );
+        ReferenceList list = new ReferenceList( );
 
         list.addItem( "1", "Jasper" );
         list.addItem( "2", "Two" );

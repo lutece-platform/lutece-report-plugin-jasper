@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,28 +38,29 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Collection;
 
-
 /**
  * This class provides instances management methods (create, find, ...) for JasperReport objects
  */
 public final class JasperReportHome
 {
     // Static variable pointed at the DAO instance
-    private static IJasperReportDAO _dao = (IJasperReportDAO) SpringContextService.getPluginBean( "jasper",
-            "jasperReportDAO" );
+    private static IJasperReportDAO _dao = (IJasperReportDAO) SpringContextService.getPluginBean( "jasper", "jasperReportDAO" );
 
     /**
      * Private constructor - this class need not be instantiated
      */
-    private JasperReportHome(  )
+    private JasperReportHome( )
     {
     }
 
     /**
      * Create an instance of the jasperReport class
-     * @param jasperReport The instance of the JasperReport which contains the informations to store
-     * @param plugin the Plugin
-     * @return The  instance of jasperReport which has been created with its primary key.
+     * 
+     * @param jasperReport
+     *            The instance of the JasperReport which contains the informations to store
+     * @param plugin
+     *            the Plugin
+     * @return The instance of jasperReport which has been created with its primary key.
      */
     public static JasperReport create( JasperReport jasperReport, Plugin plugin )
     {
@@ -70,9 +71,12 @@ public final class JasperReportHome
 
     /**
      * Update of the jasperReport which is specified in parameter
-     * @param jasperReport The instance of the JasperReport which contains the data to store
-     * @param plugin the Plugin
-     * @return The instance of the  jasperReport which has been updated
+     * 
+     * @param jasperReport
+     *            The instance of the JasperReport which contains the data to store
+     * @param plugin
+     *            the Plugin
+     * @return The instance of the jasperReport which has been updated
      */
     public static JasperReport update( JasperReport jasperReport, Plugin plugin )
     {
@@ -83,21 +87,27 @@ public final class JasperReportHome
 
     /**
      * Remove the jasperReport whose identifier is specified in parameter
-     * @param nJasperReportId The jasperReport Id
-     * @param plugin the Plugin
+     * 
+     * @param nJasperReportId
+     *            The jasperReport Id
+     * @param plugin
+     *            the Plugin
      */
     public static void remove( int nJasperReportId, Plugin plugin )
     {
         _dao.delete( nJasperReportId, plugin );
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // Finders
 
     /**
      * Returns an instance of a jasperReport whose identifier is specified in parameter
-     * @param nKey The jasperReport primary key
-     * @param plugin the Plugin
+     * 
+     * @param nKey
+     *            The jasperReport primary key
+     * @param plugin
+     *            the Plugin
      * @return an instance of JasperReport
      */
     public static JasperReport findByPrimaryKey( int nKey, Plugin plugin )
@@ -107,7 +117,9 @@ public final class JasperReportHome
 
     /**
      * Load the data of all the jasperReport objects and returns them in form of a collection
-     * @param plugin the Plugin
+     * 
+     * @param plugin
+     *            the Plugin
      * @return the collection which contains the data of all the jasperReport objects
      */
     public static Collection<JasperReport> getJasperReportsList( Plugin plugin )
