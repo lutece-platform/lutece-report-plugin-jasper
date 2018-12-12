@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,29 +38,28 @@ import fr.paris.lutece.portal.service.database.PluginConnectionService;
 
 import java.util.Hashtable;
 
-
 /**
  * This class provides DbPageConnectionService object
  */
 public final class JasperConnectionService
 {
-    //Constants
-    private static JasperConnectionService _singleton = new JasperConnectionService(  );
-    private static Hashtable _htConnectionServices = new Hashtable(  );
+    // Constants
+    private static JasperConnectionService _singleton = new JasperConnectionService( );
+    private static Hashtable _htConnectionServices = new Hashtable( );
 
     /**
      * Creates a new DbPageConnectionService object.
      */
-    private JasperConnectionService(  )
+    private JasperConnectionService( )
     {
     }
 
     /**
-     * Get a connection service corresponding to the given poolname. If the pool
-     * name is empty, the default connection service of the current plugin is returned
+     * Get a connection service corresponding to the given poolname. If the pool name is empty, the default connection service of the current plugin is returned
      *
      * @return A Connection Service
-     * @param strPoolName The Poolname
+     * @param strPoolName
+     *            The Poolname
      */
     public static PluginConnectionService getConnectionService( String strPoolName )
     {
@@ -80,7 +79,7 @@ public final class JasperConnectionService
         }
         else
         {
-            connectionService = AppConnectionService.getDefaultConnectionService(  );
+            connectionService = AppConnectionService.getDefaultConnectionService( );
         }
 
         return connectionService;
@@ -88,9 +87,10 @@ public final class JasperConnectionService
 
     /**
      * Provides singleton to connection service
+     * 
      * @return Returns an instance of the connection service
      */
-    public static JasperConnectionService getInstance(  )
+    public static JasperConnectionService getInstance( )
     {
         return _singleton;
     }

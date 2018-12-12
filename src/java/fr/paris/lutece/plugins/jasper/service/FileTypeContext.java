@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-
 public class FileTypeContext
 {
     private ILinkJasperReport strategy;
@@ -51,40 +50,39 @@ public class FileTypeContext
         this.strategy = strategy;
     }
 
-    public String getFileLink( String strReportCode)
+    public String getFileLink( String strReportCode )
     {
         return strategy.getLink( strReportCode );
     }
 
-    public byte[] getBuffer( String strReportCode, HttpServletRequest request )
+    public byte [ ] getBuffer( String strReportCode, HttpServletRequest request )
     {
         return strategy.getBuffer( strReportCode, request );
     }
-    
-    
-    public byte[] getBuffer( String strReportCode,JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
+
+    public byte [ ] getBuffer( String strReportCode, JRBeanCollectionDataSource dataSource, Map<String, Object> parameters, HttpServletRequest request )
     {
         // We override the methods instead of replacing them to ensure binary compatibility
-        return getBuffer( strReportCode, (JRDataSource) dataSource,  parameters, request);
-    }
-    
-    public byte[] getBuffer( String strReportCode,JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request)
-    {
-        return strategy.getBuffer(strReportCode, dataSource, parameters, request);
-    }
-    
-    
-    public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
-    {
-        // We override the methods instead of replacing them to ensure binary compatibility
-        return getBuffer(report, (JRDataSource)dataSource, parameters, request);
-    }
-    
-    public byte[] getBuffer(  fr.paris.lutece.plugins.jasper.business.JasperReport report, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
-    {
-        return strategy.getBuffer(report, dataSource, parameters, request);
+        return getBuffer( strReportCode, (JRDataSource) dataSource, parameters, request );
     }
 
+    public byte [ ] getBuffer( String strReportCode, JRDataSource dataSource, Map<String, Object> parameters, HttpServletRequest request )
+    {
+        return strategy.getBuffer( strReportCode, dataSource, parameters, request );
+    }
+
+    public byte [ ] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRBeanCollectionDataSource dataSource,
+            Map<String, Object> parameters, HttpServletRequest request )
+    {
+        // We override the methods instead of replacing them to ensure binary compatibility
+        return getBuffer( report, (JRDataSource) dataSource, parameters, request );
+    }
+
+    public byte [ ] getBuffer( fr.paris.lutece.plugins.jasper.business.JasperReport report, JRDataSource dataSource, Map<String, Object> parameters,
+            HttpServletRequest request )
+    {
+        return strategy.getBuffer( report, dataSource, parameters, request );
+    }
 
     public String getFileName( String strReportId )
     {

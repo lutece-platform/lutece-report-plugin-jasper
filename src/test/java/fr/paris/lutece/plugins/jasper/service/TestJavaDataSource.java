@@ -8,13 +8,13 @@ public class TestJavaDataSource
 
     private String strNumber;
     private String strTitle;
-    
+
     private List<GroupData> listGroupData;
 
     public TestJavaDataSource( )
     {
         this.strNumber = "101";
-        this.strTitle= "test data source";   
+        this.strTitle = "test data source";
         this.listGroupData = new ArrayList<>( );
 
         for ( int i = 0; i < 10; i++ )
@@ -25,12 +25,14 @@ public class TestJavaDataSource
 
             for ( int j = 0; j < 10; j++ )
             {
-               EntryData entry=new EntryData( );
-               entry.setName( "********* ******** entry name ******* ************ **** ****** ******* ************ **** ************* ************ **** ***** ******** ************ **** ****** " +j );
-               entry.setValue("********* ******** entry value ************ **** ************* ************ **** ************* ************ **** ************* ************ **** ******  " +j );
-               
+                EntryData entry = new EntryData( );
+                entry.setName( "********* ******** entry name ******* ************ **** ****** ******* ************ **** ************* ************ **** ***** ******** ************ **** ****** "
+                        + j );
+                entry.setValue( "********* ******** entry value ************ **** ************* ************ **** ************* ************ **** ************* ************ **** ******  "
+                        + j );
+
                 groupData.getListEntries( ).add( entry );
-                
+
             }
 
             EntryData entry = new EntryData( );

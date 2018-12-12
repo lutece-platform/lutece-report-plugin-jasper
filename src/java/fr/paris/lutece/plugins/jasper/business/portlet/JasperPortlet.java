@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import fr.paris.lutece.util.xml.XmlUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * This class represents business objects JasperPortlet
  */
@@ -47,22 +46,23 @@ public class JasperPortlet extends Portlet
     private static final String TAG_JASPER_PORTLET = "jasper-portlet";
     private static final String TAG_JASPER_PORTLET_CONTENT = "jasper-portlet-content";
 
-    /////////////////////////////////////////////////////////////////////////////////
+    // ///////////////////////////////////////////////////////////////////////////////
     // Constants
     private String _strJasperFeedId;
 
     /**
      * Sets the identifier of the portlet type to value specified
      */
-    public JasperPortlet(  )
+    public JasperPortlet( )
     {
-        setPortletTypeId( JasperPortletHome.getInstance(  ).getPortletTypeId(  ) );
+        setPortletTypeId( JasperPortletHome.getInstance( ).getPortletTypeId( ) );
     }
 
     /**
      * Sets the url of the portlet
      *
-     * @param strJasperFeedId the Jasper portlet url
+     * @param strJasperFeedId
+     *            the Jasper portlet url
      */
     public void setJasperFeedId( String strJasperFeedId )
     {
@@ -74,7 +74,7 @@ public class JasperPortlet extends Portlet
      *
      * @return the Jasper Portlet url
      */
-    public String getJasperFeedId(  )
+    public String getJasperFeedId( )
     {
         return _strJasperFeedId;
     }
@@ -82,23 +82,25 @@ public class JasperPortlet extends Portlet
     /**
      * Returns the Xml code of the Jasper portlet with XML heading
      *
-     * @param request The HTTP servlet request
+     * @param request
+     *            The HTTP servlet request
      * @return the Xml code of the Jasper portlet
      */
     public String getXmlDocument( HttpServletRequest request )
     {
-        return XmlUtil.getXmlHeader(  ) + getXml( request );
+        return XmlUtil.getXmlHeader( ) + getXml( request );
     }
 
     /**
      * Returns the Xml code of the Jasper portlet without XML heading
      *
-     * @param request The HTTP servlet request
+     * @param request
+     *            The HTTP servlet request
      * @return the Xml code of the Jasper portlet content
      */
     public String getXml( HttpServletRequest request )
     {
-        StringBuffer strXml = new StringBuffer(  );
+        StringBuffer strXml = new StringBuffer( );
 
         XmlUtil.beginElement( strXml, TAG_JASPER_PORTLET );
         XmlUtil.addElementHtml( strXml, TAG_JASPER_PORTLET_CONTENT, _strJasperFeedId );
@@ -110,16 +112,16 @@ public class JasperPortlet extends Portlet
     /**
      * Updates the current instance of the JasperPortlet object
      */
-    public void update(  )
+    public void update( )
     {
-        JasperPortletHome.getInstance(  ).update( this );
+        JasperPortletHome.getInstance( ).update( this );
     }
 
     /**
      * Removes the current instance of the JasperPortlet object
      */
-    public void remove(  )
+    public void remove( )
     {
-        JasperPortletHome.getInstance(  ).remove( this );
+        JasperPortletHome.getInstance( ).remove( this );
     }
 }

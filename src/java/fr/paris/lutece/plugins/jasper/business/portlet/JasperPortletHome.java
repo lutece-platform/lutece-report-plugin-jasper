@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,15 +38,13 @@ import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
-
 /**
  * This class provides instances management methods for Jasper objects
  */
 public class JasperPortletHome extends PortletHome
 {
     // Static variable pointed at the DAO instance
-    private static IJasperPortletDAO _dao = (IJasperPortletDAO) SpringContextService.getPluginBean( "jasper",
-            "jasperPortletDAO" );
+    private static IJasperPortletDAO _dao = (IJasperPortletDAO) SpringContextService.getPluginBean( "jasper", "jasperPortletDAO" );
 
     /* This class implements the Singleton design pattern. */
     private static JasperPortletHome _singleton;
@@ -54,7 +52,7 @@ public class JasperPortletHome extends PortletHome
     /**
      * Constructor
      */
-    public JasperPortletHome(  )
+    public JasperPortletHome( )
     {
         if ( _singleton == null )
         {
@@ -67,9 +65,9 @@ public class JasperPortletHome extends PortletHome
      *
      * @return the portlet type identifier
      */
-    public String getPortletTypeId(  )
+    public String getPortletTypeId( )
     {
-        String strCurrentClassName = this.getClass(  ).getName(  );
+        String strCurrentClassName = this.getClass( ).getName( );
         String strPortletTypeId = PortletTypeHome.getPortletTypeId( strCurrentClassName );
 
         return strPortletTypeId;
@@ -80,11 +78,11 @@ public class JasperPortletHome extends PortletHome
      *
      * @return the Jasper Portlet instance
      */
-    public static PortletHome getInstance(  )
+    public static PortletHome getInstance( )
     {
         if ( _singleton == null )
         {
-            _singleton = new JasperPortletHome(  );
+            _singleton = new JasperPortletHome( );
         }
 
         return _singleton;
@@ -95,15 +93,17 @@ public class JasperPortletHome extends PortletHome
      *
      * @return the instance of the DAO singleton
      */
-    public IPortletInterfaceDAO getDAO(  )
+    public IPortletInterfaceDAO getDAO( )
     {
         return _dao;
     }
 
     /**
      * Checks whether the jasper feed is linked to a portlet
+     * 
      * @return The boolean result
-     * @param nIdJasperFeed The identifier of the jasper feed
+     * @param nIdJasperFeed
+     *            The identifier of the jasper feed
      */
     public static boolean checkNoPortletLinked( int nIdJasperFeed )
     {

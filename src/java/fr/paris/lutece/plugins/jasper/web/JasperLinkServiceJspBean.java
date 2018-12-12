@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 public class JasperLinkServiceJspBean extends InsertServiceJspBean implements InsertServiceSelectionBean
 {
     /**
@@ -73,24 +72,23 @@ public class JasperLinkServiceJspBean extends InsertServiceJspBean implements In
     {
         String strInput = request.getParameter( PARAMETER_INPUT );
         Plugin plugin = PluginService.getPlugin( "jasper" );
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
         Locale locale = AdminUserService.getLocale( request );
-        ReferenceList reports = new ReferenceList(  );
-        ReferenceList listFileTypes = new ReferenceList(  );
+        ReferenceList reports = new ReferenceList( );
+        ReferenceList listFileTypes = new ReferenceList( );
 
-
-        Collection<ILinkJasperReport> col = ExportFormatService.INSTANCE.getExportTypes(  );
+        Collection<ILinkJasperReport> col = ExportFormatService.INSTANCE.getExportTypes( );
 
         for ( ILinkJasperReport renderFormat : col )
         {
-            listFileTypes.addItem( renderFormat.getFileType(  ), renderFormat.getFileType(  ) );
+            listFileTypes.addItem( renderFormat.getFileType( ), renderFormat.getFileType( ) );
         }
 
         Collection<JasperReport> reportsList = JasperReportHome.getJasperReportsList( plugin );
 
         for ( JasperReport report : reportsList )
         {
-            reports.addItem( report.getCode(  ), report.getCode(  ) );
+            reports.addItem( report.getCode( ), report.getCode( ) );
         }
 
         model.put( MARK_REPORTS, reports );
@@ -99,12 +97,14 @@ public class JasperLinkServiceJspBean extends InsertServiceJspBean implements In
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_FILE_TYPES_VAILABLE, locale, model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Insert the link into the editor
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return The code to insert
      */
     public String doInsertLink( HttpServletRequest request )

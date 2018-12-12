@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 import java.io.File;
 
-
 /**
  *
  * ImagePurgeService
@@ -48,30 +47,30 @@ public class ImagePurgeService
 {
     private static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
 
-    private ImagePurgeService(  )
+    private ImagePurgeService( )
     {
     }
 
-    public static void purgeFiles(  )
+    public static void purgeFiles( )
     {
         String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-        String strRootPath = AppPathService.getWebAppPath(  ) + strDirectoryPath;
+        String strRootPath = AppPathService.getWebAppPath( ) + strDirectoryPath;
         File folder = new File( strRootPath );
         deleteFolderWithContent( folder );
 
         File newFolder = new File( strRootPath );
-        newFolder.mkdir(  );
+        newFolder.mkdir( );
     }
 
     public static boolean deleteFolderWithContent( File folder )
     {
-        if ( folder.isDirectory(  ) )
+        if ( folder.isDirectory( ) )
         {
-            String[] files = folder.list(  );
+            String [ ] files = folder.list( );
 
             for ( int i = 0; i < files.length; i++ )
             {
-                boolean success = deleteFolderWithContent( new File( folder, files[i] ) );
+                boolean success = deleteFolderWithContent( new File( folder, files [i] ) );
 
                 if ( !success )
                 {
@@ -80,6 +79,6 @@ public class ImagePurgeService
             }
         }
 
-        return folder.delete(  );
+        return folder.delete( );
     }
 }

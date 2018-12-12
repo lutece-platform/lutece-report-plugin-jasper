@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.jasper.service;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,6 +45,7 @@ import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 public enum JasperFileLinkService
 {
     /**
@@ -62,7 +62,7 @@ public enum JasperFileLinkService
     private static final String PARAMETER_DBPAGE = "dbpage";
     private static final String PARAMETER_JASPER_VALUE = "value";
     private static final String PARAMETER_JASPER_LIST = "list";
-    HashMap<String,ILinkJasperReport> mapStrategies;
+    HashMap<String, ILinkJasperReport> mapStrategies;
 
     public static String getLink( String strReportId, String strType )
     {
@@ -73,18 +73,18 @@ public enum JasperFileLinkService
 
     static FileTypeContext getFileTypeContext( String strType )
     {
-        Collection<ILinkJasperReport> col =  ExportFormatService.INSTANCE.getExportTypes(  );
+        Collection<ILinkJasperReport> col = ExportFormatService.INSTANCE.getExportTypes( );
         FileTypeContext fileTypeContext = null;
 
         for ( ILinkJasperReport renderFormat : col )
         {
-            if ( renderFormat.getFileType(  ).equals( strType ) )
+            if ( renderFormat.getFileType( ).equals( strType ) )
             {
                 return new FileTypeContext( renderFormat );
             }
             else
             {
-                fileTypeContext = new FileTypeContext( new HtmlJasperRender(  ) );
+                fileTypeContext = new FileTypeContext( new HtmlJasperRender( ) );
             }
         }
 
@@ -93,63 +93,66 @@ public enum JasperFileLinkService
 
     /**
      * Exports the files in a byte array
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return An array of byte which is the content of the archive
      */
-    public static byte[] exportFile( HttpServletRequest request )
+    public static byte [ ] exportFile( HttpServletRequest request )
     {
         String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
         String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        return exportFile(strReportCode, strType, request);
+        return exportFile( strReportCode, strType, request );
     }
 
-    public static byte[] exportFile( HttpServletRequest request, String strReportCode )
+    public static byte [ ] exportFile( HttpServletRequest request, String strReportCode )
     {
-    	String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        return exportFile(strReportCode, strType, request);
-     }
-    
-    public static byte[] exportFile( String strReportCode, String strJasperType, HttpServletRequest request )
+        String strType = request.getParameter( PARAMETER_REPORT_TYPE );
+        return exportFile( strReportCode, strType, request );
+    }
+
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, HttpServletRequest request )
     {
-        
-        byte[] buffer = new byte[1024];
+
+        byte [ ] buffer = new byte [ 1024];
 
         FileTypeContext context = getFileTypeContext( strJasperType );
         buffer = context.getBuffer( strReportCode, request );
 
         return buffer;
     }
-    
-    public static byte[] exportFile( String strReportCode, String strJasperType,JRBeanCollectionDataSource dataSource, HttpServletRequest request )
-    {
-		// We override the methods instead of replacing them to ensure binary compatibility
-        return exportFile( strReportCode, strJasperType, (JRDataSource)dataSource, request );
-    }
-    
-	public static byte[] exportFile( String strReportCode, String strJasperType,JRDataSource dataSource, HttpServletRequest request )
-    {
-        
 
-        byte[] buffer = new byte[1024];
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, JRBeanCollectionDataSource dataSource, HttpServletRequest request )
+    {
+        // We override the methods instead of replacing them to ensure binary compatibility
+        return exportFile( strReportCode, strJasperType, (JRDataSource) dataSource, request );
+    }
+
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, JRDataSource dataSource, HttpServletRequest request )
+    {
+
+        byte [ ] buffer = new byte [ 1024];
 
         FileTypeContext context = getFileTypeContext( strJasperType );
         buffer = context.getBuffer( strReportCode, request );
 
         return buffer;
     }
-    
-    public static byte[] exportFile( JasperReport report,String strJasperType, JRBeanCollectionDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+
+    public static byte [ ] exportFile( JasperReport report, String strJasperType, JRBeanCollectionDataSource dataSource, Map<String, Object> parameters,
+            HttpServletRequest request )
     {
-		// We override the methods instead of replacing them to ensure binary compatibility
-        return exportFile( report, strJasperType, (JRDataSource)dataSource,  parameters, request );
+        // We override the methods instead of replacing them to ensure binary compatibility
+        return exportFile( report, strJasperType, (JRDataSource) dataSource, parameters, request );
     }
-    
-    public static byte[] exportFile( JasperReport report,String strJasperType, JRDataSource dataSource,  Map<String, Object> parameters, HttpServletRequest request )
+
+    public static byte [ ] exportFile( JasperReport report, String strJasperType, JRDataSource dataSource, Map<String, Object> parameters,
+            HttpServletRequest request )
     {
-       
-        byte[] buffer = new byte[1024];
+
+        byte [ ] buffer = new byte [ 1024];
         FileTypeContext context = getFileTypeContext( strJasperType );
-        buffer = context.getBuffer(report, dataSource, parameters, request);
+        buffer = context.getBuffer( report, dataSource, parameters, request );
         return buffer;
     }
 
@@ -160,7 +163,8 @@ public enum JasperFileLinkService
      */
     public static String getFileName( HttpServletRequest request )
     {
-        String strReportCode = request.getParameter( PARAMETER_REPORT_ID ); String strType = request.getParameter( PARAMETER_REPORT_TYPE );
+        String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
+        String strType = request.getParameter( PARAMETER_REPORT_TYPE );
         FileTypeContext context = getFileTypeContext( strType );
 
         return context.getFileName( strReportCode );
@@ -168,12 +172,14 @@ public enum JasperFileLinkService
 
     /**
      * Extracts values from the Http request
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return A list of values
      */
     public List<String> getValues( HttpServletRequest request )
     {
-        List<String> list = new ArrayList<String>(  );
+        List<String> list = new ArrayList<String>( );
         int i = 0;
         String strValue = request.getParameter( PARAMETER_JASPER_VALUE + ( i + 1 ) );
 
@@ -184,12 +190,13 @@ public enum JasperFileLinkService
             strValue = request.getParameter( PARAMETER_JASPER_VALUE + ( i + 1 ) );
         }
 
-        //Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
+        // Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
         return list;
     }
+
     public List<String> getValuesElm( HttpServletRequest request )
     {
-        List<String> list = new ArrayList<String>(  );
+        List<String> list = new ArrayList<String>( );
         int i = 0;
         String strValue = request.getParameter( PARAMETER_JASPER_LIST + ( i + 1 ) );
 
@@ -200,14 +207,17 @@ public enum JasperFileLinkService
             strValue = request.getParameter( PARAMETER_JASPER_LIST + ( i + 1 ) );
         }
 
-        //Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
+        // Collections.sort( list, String.CASE_INSENSITIVE_ORDER );
         return list;
     }
 
     /**
      * Gets the cache key
-     * @param nMode The mode
-     * @param request The HTTP request
+     * 
+     * @param nMode
+     *            The mode
+     * @param request
+     *            The HTTP request
      * @return The key
      */
     public String getKey( HttpServletRequest request )
@@ -215,13 +225,13 @@ public enum JasperFileLinkService
         String strReportId = request.getParameter( PARAMETER_REPORT_ID );
         strReportId = ( strReportId == null ) ? "" : strReportId;
 
-        String strDBPageId = request.getParameter( PARAMETER_DBPAGE ); //Must be externalised
+        String strDBPageId = request.getParameter( PARAMETER_DBPAGE ); // Must be externalised
         strDBPageId = ( strDBPageId == null ) ? "" : strDBPageId;
 
         String strParameters = "";
         List<String> listValues = JasperFileLinkService.INSTANCE.getValues( request );
 
-        for ( int i = 0; i < listValues.size(  ); i++ )
+        for ( int i = 0; i < listValues.size( ); i++ )
         {
             strParameters += ( PARAMETER_JASPER_VALUE + ( i + 1 ) + "_" + listValues.get( i ) );
         }

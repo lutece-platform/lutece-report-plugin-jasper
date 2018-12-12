@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * This class provides a simple implementation of an XPage
  */
@@ -61,44 +60,48 @@ public class JasperApp extends AbstractCacheableService implements XPageApplicat
     /**
      * Creates a new JasperApp object
      */
-    public JasperApp(  )
+    public JasperApp( )
     {
         if ( !_bRegister )
         {
-            initCache();
+            initCache( );
             _bRegister = true;
         }
     }
 
     /**
-    * Returns the content of the page jasper.
-    * @param request The http request
-    * @param nMode The current mode
-    * @param plugin The plugin object
-    * @throws fr.paris.lutece.portal.service.message.SiteMessageException Message displayed if an exception occurs
-    */
-    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin )
-        throws SiteMessageException
+     * Returns the content of the page jasper.
+     * 
+     * @param request
+     *            The http request
+     * @param nMode
+     *            The current mode
+     * @param plugin
+     *            The plugin object
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             Message displayed if an exception occurs
+     */
+    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin ) throws SiteMessageException
     {
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
         // String strKey = JasperFileLinkService.INSTANCE.getKey( request );
 
-        Locale locale = request.getLocale(  );
+        Locale locale = request.getLocale( );
 
         // Check the key in the cache
         // if ( !_mapSiteMapCache.containsKey( strKey ) )
         // {
-            byte[] arrayContent = JasperFileLinkService.exportFile( request );
+        byte [ ] arrayContent = JasperFileLinkService.exportFile( request );
 
-            // Build the HTML document from the report
-            String strPage = new String( arrayContent );
+        // Build the HTML document from the report
+        String strPage = new String( arrayContent );
 
         // // Add it to the cache
         // _mapSiteMapCache.put( strKey, strPage );
 
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATH_LABEL, locale ) );
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGE_TITLE, locale ) );
-            page.setContent( strPage );
+        page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATH_LABEL, locale ) );
+        page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGE_TITLE, locale ) );
+        page.setContent( strPage );
 
         return page;
         // }
@@ -113,8 +116,7 @@ public class JasperApp extends AbstractCacheableService implements XPageApplicat
         // return page;
     }
 
-
-    public String getName(  )
+    public String getName( )
     {
         return SERVICE_NAME;
     }

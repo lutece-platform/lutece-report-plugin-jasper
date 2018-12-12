@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  * DownloadFileServlet
  *
@@ -52,75 +51,91 @@ public class DownloadFileServlet extends HttpServlet
 {
     private static final long serialVersionUID = -6564244054015195801L;
 
-    public DownloadFileServlet(  )
+    public DownloadFileServlet( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException the servlet Exception
-     * @throws IOException the io exception
+     * 
+     * @param request
+     *            servlet request
+     * @param response
+     *            servlet response
+     * @throws ServletException
+     *             the servlet Exception
+     * @throws IOException
+     *             the io exception
      */
-    protected void processRequest( HttpServletRequest request, HttpServletResponse response )
-        throws ServletException, IOException
+    protected void processRequest( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
         try
         {
-            byte[] fileContent = JasperFileLinkService.exportFile( request );
+            byte [ ] fileContent = JasperFileLinkService.exportFile( request );
             String strFileName = JasperFileLinkService.getFileName( request );
 
             if ( fileContent != null )
             {
-                //the header and also the names set by which user will be prompted to save
+                // the header and also the names set by which user will be prompted to save
                 response.setHeader( "Content-Disposition", "attachment;filename=\"" + strFileName + "\"" );
 
-                String strMimetype = getServletContext(  ).getMimeType( strFileName );
+                String strMimetype = getServletContext( ).getMimeType( strFileName );
                 response.setContentType( ( strMimetype != null ) ? strMimetype : "application/octet-stream" );
                 response.setHeader( "Cache-Control", "must-revalidate" );
-                response.getOutputStream(  ).write( fileContent );
+                response.getOutputStream( ).write( fileContent );
             }
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
-            AppLogService.error( e.getMessage(  ), e );
+            AppLogService.error( e.getMessage( ), e );
         }
         finally
         {
-            response.getOutputStream(  ).flush(  );
+            response.getOutputStream( ).flush( );
         }
     }
 
-    /** Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-         * @throws ServletException the servlet Exception
-         * @throws IOException the io exception
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     * 
+     * @param request
+     *            servlet request
+     * @param response
+     *            servlet response
+     * @throws ServletException
+     *             the servlet Exception
+     * @throws IOException
+     *             the io exception
      */
-    protected void doGet( HttpServletRequest request, HttpServletResponse response )
-        throws ServletException, IOException
+    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
         processRequest( request, response );
     }
 
-    /** Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-         * @throws ServletException the servlet Exception
-         * @throws IOException the io exception
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     * 
+     * @param request
+     *            servlet request
+     * @param response
+     *            servlet response
+     * @throws ServletException
+     *             the servlet Exception
+     * @throws IOException
+     *             the io exception
      */
-    protected void doPost( HttpServletRequest request, HttpServletResponse response )
-        throws ServletException, IOException
+    protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
         processRequest( request, response );
     }
 
-    /** Returns a short description of the servlet.
-         * @return message
+    /**
+     * Returns a short description of the servlet.
+     * 
+     * @return message
      */
-    public String getServletInfo(  )
+    public String getServletInfo( )
     {
         return "Servlet downloadFile content";
     }

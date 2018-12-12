@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,33 +35,35 @@ package fr.paris.lutece.plugins.jasper.business;
 
 import java.util.ArrayList;
 
-
 /**
  * This is the business class for the object JasperReport
  */
 public class JasperReport
 {
-    // Variables declarations 
+    // Variables declarations
     private int _nIdReport;
     private String _strCode;
     private String _strUrl;
     private String _strPool;
     private String _strFileFolder;
     private java.sql.Timestamp _dateModification;
-    private ArrayList<String> _listFileFormats = new ArrayList<String>(  );
+    private ArrayList<String> _listFileFormats = new ArrayList<String>( );
 
     /**
      * Returns the IdReport
+     * 
      * @return The IdReport
      */
-    public int getIdReport(  )
+    public int getIdReport( )
     {
         return _nIdReport;
     }
 
     /**
      * Sets the IdReport
-     * @param nIdReport The IdReport
+     * 
+     * @param nIdReport
+     *            The IdReport
      */
     public void setIdReport( int nIdReport )
     {
@@ -70,23 +72,26 @@ public class JasperReport
 
     /**
      * Returns the report code
+     * 
      * @return the report code
      */
-    public String getCode(  )
+    public String getCode( )
     {
         return _strCode;
     }
 
     /**
      * Sets the report code
-     * @param strCode The Description
+     * 
+     * @param strCode
+     *            The Description
      */
     public void setCode( String strCode )
     {
         _strCode = strCode;
     }
 
-    public String getFileFolder(  )
+    public String getFileFolder( )
     {
         return _strFileFolder;
     }
@@ -98,30 +103,35 @@ public class JasperReport
 
     /**
      * Returns the Url of the jasper file
+     * 
      * @return The Url of the jasper file
      */
-    public String getUrl(  )
+    public String getUrl( )
     {
         return _strUrl;
     }
 
     /**
      * Sets the Url of the jasper file
-     * @param strUrl The url
+     * 
+     * @param strUrl
+     *            The url
      */
     public void setUrl( String strUrl )
     {
         _strUrl = strUrl;
     }
 
-    public String getPool(  )
+    public String getPool( )
     {
         return _strPool;
     }
 
     /**
      * Sets the Description
-     * @param strDescription The Description
+     * 
+     * @param strDescription
+     *            The Description
      */
     public void setPool( String strPool )
     {
@@ -131,17 +141,18 @@ public class JasperReport
     /**
      * Returns the Date of the last Modification
      *
-     * @return The Date  of the last Modification
+     * @return The Date of the last Modification
      */
-    public java.sql.Timestamp getDateModification(  )
+    public java.sql.Timestamp getDateModification( )
     {
         return _dateModification;
     }
 
     /**
-     * Sets the Date  of the last Modification
+     * Sets the Date of the last Modification
      *
-     * @param dateModification The Date  of the last Modification
+     * @param dateModification
+     *            The Date of the last Modification
      */
     public void setDateModification( java.sql.Timestamp dateModification )
     {
@@ -151,7 +162,8 @@ public class JasperReport
     /**
      * Adds a file format
      *
-     * @param strFileFormat A file format chosen
+     * @param strFileFormat
+     *            A file format chosen
      */
     public void addFileFormat( String strFileFormat )
     {
@@ -161,7 +173,8 @@ public class JasperReport
     /**
      * Adds a file format
      *
-     * @param listFileFormat A file formats list
+     * @param listFileFormat
+     *            A file formats list
      */
     public void addFileFormats( ArrayList<String> listFileFormat )
     {
@@ -171,7 +184,7 @@ public class JasperReport
         }
     }
 
-    public ArrayList<String> getFileFormats(  )
+    public ArrayList<String> getFileFormats( )
     {
         return _listFileFormats;
     }
