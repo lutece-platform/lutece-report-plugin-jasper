@@ -44,6 +44,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.plugins.jasper.business.JasperReportHome;
 import fr.paris.lutece.plugins.jasper.service.ILinkJasperReport;
 import fr.paris.lutece.plugins.jasper.service.JasperConnectionService;
@@ -71,6 +73,8 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     protected static final String PROPERTY_FILES_PATH = "jasper.files.path";
     protected static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
     protected static final String PROPERTY_EXPORT_CHARACTER_ENCODING = "jasper.export.characterEncoding";
+    protected static final String PROPERTY_FILES_ROOT_PATH = "jasper.files.root.path";
+    protected static final String PROPERTY_IMAGES_ROOT_PATH = "jasper.images.root.path";
     protected static final String PARAMETER_JASPER_VALUE = "value";
     protected static final String PARAMETER_JASPER_IMAGE_DIRECTORY = "imageDirectory";
     protected static final String PARAMETER_JASPER_SUB_REPORT_DIRECTORY = "SUBREPORT_DIR";
@@ -173,16 +177,23 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
 
             String strPageDesc = report.getUrl( );
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strAbsolutePath = AppPathService.getWebAppPath( ) + strDirectoryPath + strPageDesc;
+            
+            String strRootFilesPath = AppPropertiesService.getProperty( PROPERTY_FILES_ROOT_PATH );
+            String strRootImagesPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_ROOT_PATH );
 
-            String strSubReportPath = AppPathService.getWebAppPath( ) + strDirectoryPath + report.getCode( ) + "/";
+            String strRootFilesDirectory = StringUtils.isNoneBlank( strRootFilesPath ) ? strRootFilesPath : AppPathService.getWebAppPath( );
+            String strRootImagesDirectory = StringUtils.isNoneBlank( strRootImagesPath ) ? strRootImagesPath : AppPathService.getWebAppPath( );
+            
+            String strAbsolutePath = strRootFilesDirectory + strDirectoryPath + strPageDesc;
+
+            String strSubReportPath = strRootFilesDirectory + strDirectoryPath + report.getCode( ) + "/";
 
             File reportFile = new File( strAbsolutePath );
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
 
             String strImageDirectoryPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-            String strImageDirectoryAbsolutePath = new StringBuffer( AppPathService.getWebAppPath( ) ).append( strImageDirectoryPath )
+            String strImageDirectoryAbsolutePath = new StringBuffer( strRootImagesDirectory ).append( strImageDirectoryPath )
                     .append( report.getCode( ) ).append( PATH_SEPARATOR ).toString( );
             parameters.put( PARAMETER_JASPER_IMAGE_DIRECTORY, strImageDirectoryAbsolutePath );
             parameters.put( PARAMETER_JASPER_SUB_REPORT_DIRECTORY, strSubReportPath );

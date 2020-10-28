@@ -33,10 +33,12 @@
  */
 package fr.paris.lutece.plugins.jasper.service.purge;
 
+import java.io.File;
+
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
-
-import java.io.File;
 
 /**
  *
@@ -46,6 +48,8 @@ import java.io.File;
 public class ImagePurgeService
 {
     private static final String PROPERTY_IMAGES_FILES_PATH = "jasper.images.path";
+    protected static final String PROPERTY_IMAGES_ROOT_PATH = "jasper.images.root.path";
+
 
     private ImagePurgeService( )
     {
@@ -53,8 +57,10 @@ public class ImagePurgeService
 
     public static void purgeFiles( )
     {
+        String strRootImagesPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_ROOT_PATH );
+        String strRootImagesDirectory = StringUtils.isNoneBlank( strRootImagesPath ) ? strRootImagesPath : AppPathService.getWebAppPath( );
         String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-        String strRootPath = AppPathService.getWebAppPath( ) + strDirectoryPath;
+        String strRootPath = strRootImagesDirectory + strDirectoryPath;
         File folder = new File( strRootPath );
         deleteFolderWithContent( folder );
 

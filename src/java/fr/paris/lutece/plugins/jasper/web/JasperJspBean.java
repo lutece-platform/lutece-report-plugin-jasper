@@ -33,12 +33,23 @@
  */
 package fr.paris.lutece.plugins.jasper.web;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.plugins.jasper.business.JasperReportHome;
 import fr.paris.lutece.plugins.jasper.service.ExportFormatService;
-import fr.paris.lutece.plugins.jasper.service.FileTypeContext;
 import fr.paris.lutece.plugins.jasper.service.ILinkJasperReport;
-import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
 import fr.paris.lutece.portal.service.database.AppConnectionService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
@@ -54,21 +65,6 @@ import fr.paris.lutece.util.filesystem.UploadUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.html.Paginator;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.fileupload.FileItem;
-
-import org.w3c.tidy.Report;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This class provides the user interface to manage JasperReport features ( manage, create, modify, remove )
@@ -115,6 +111,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
     private static final String JSP_MANAGE_JASPERREPORTS = "jsp/admin/plugins/jasper/ManageJasperReports.jsp";
     private static final String JSP_REDIRECT_TO_MANAGE_JASPERREPORTS = "ManageJasperReports.jsp";
     private static final String PROPERTY_FILES_PATH = "jasper.files.path";
+    protected static final String PROPERTY_FILES_ROOT_PATH = "jasper.files.root.path";
 
     // Properties
     private static final String PROPERTY_DEFAULT_LIST_JASPERREPORT_PER_PAGE = "jasper.listJasperReports.itemsPerPage";
@@ -252,7 +249,9 @@ public class JasperJspBean extends PluginAdminPageJspBean
         String strCleanReportName = UploadUtil.cleanFileName( report.getCode( ) );
 
         String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-        String strFolderPath = AppPathService.getWebAppPath( ) + strDirectoryPath + strCleanReportName;
+        String strRootFilesPath = AppPropertiesService.getProperty( PROPERTY_FILES_ROOT_PATH );
+        String strRootFilesDirectory = StringUtils.isNoneBlank( strRootFilesPath ) ? strRootFilesPath : AppPathService.getWebAppPath( );
+        String strFolderPath = strRootFilesDirectory + strDirectoryPath + strCleanReportName;
         File folder = new File( strFolderPath );
         deleteFolderWithContent( folder );
         JasperReportHome.remove( nId, getPlugin( ) );
@@ -388,7 +387,9 @@ public class JasperJspBean extends PluginAdminPageJspBean
             String strNameFile = file.getName( );
 
             String strDirectoryPath = AppPropertiesService.getProperty( PROPERTY_FILES_PATH );
-            String strFolderPath = AppPathService.getWebAppPath( ) + strDirectoryPath + strReportCode;
+            String strRootFilesPath = AppPropertiesService.getProperty( PROPERTY_FILES_ROOT_PATH );
+            String strRootFilesDirectory = StringUtils.isNoneBlank( strRootFilesPath ) ? strRootFilesPath : AppPathService.getWebAppPath( );
+            String strFolderPath = strRootFilesDirectory + strDirectoryPath + strReportCode;
             File folder = new File( strFolderPath );
 
             try
@@ -403,7 +404,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
                 AppLogService.error( e );
             }
 
-            String filePath = AppPathService.getWebAppPath( ) + strDirectoryPath + strReportCode + "/" + strNameFile;
+            String filePath = strRootFilesDirectory + strDirectoryPath + strReportCode + "/" + strNameFile;
 
             if ( !new File( filePath ).isDirectory( ) && bUpdateJasper )
             {
