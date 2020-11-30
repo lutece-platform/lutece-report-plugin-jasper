@@ -37,6 +37,8 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.plugins.jasper.service.JasperFileLinkService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -122,7 +124,9 @@ public class HtmlJasperRender extends AbstractDefaultJasperRender
 
         // Save image Map to file system
         String strImageFolderPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
-        String strAbsoluteImagePath = new StringBuffer( AppPathService.getWebAppPath( ) ).append( strImageFolderPath ).append( report.getUrl( ) )
+        String strRootImagesPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_ROOT_PATH );
+        String strRootImagesDirectory = StringUtils.isNoneBlank( strRootImagesPath ) ? strRootImagesPath : AppPathService.getWebAppPath( );
+        String strAbsoluteImagePath = new StringBuffer( strRootImagesDirectory ).append( strImageFolderPath ).append( report.getUrl( ) )
                 .append( PATH_SEPARATOR ).append( JasperFileLinkService.INSTANCE.getKey( request ) ).toString( );
         File imageFolder = new File( strAbsoluteImagePath );
 
