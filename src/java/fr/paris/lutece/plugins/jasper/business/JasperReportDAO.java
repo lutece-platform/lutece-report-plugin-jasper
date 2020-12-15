@@ -63,19 +63,20 @@ public final class JasperReportDAO implements IJasperReportDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
+    	int nKey;
+    	
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
+    	{
+    		daoUtil.executeQuery( );
+    		
+    		if ( !daoUtil.next( ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
 
-        int nKey;
-
-        if ( !daoUtil.next( ) )
-        {
-            // if the table is empty
-            nKey = 1;
-        }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free( );
+            nKey = daoUtil.getInt( 1 ) + 1;
+    	}
 
         return nKey;
     }
@@ -89,18 +90,18 @@ public final class JasperReportDAO implements IJasperReportDAO
      *            The plugin
      */
     public void insert( JasperReport report, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
+    {   
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+    	{
+    		report.setIdReport( newPrimaryKey( plugin ) );
 
-        report.setIdReport( newPrimaryKey( plugin ) );
+            daoUtil.setInt( 1, report.getIdReport( ) );
+            daoUtil.setString( 2, report.getCode( ) );
+            daoUtil.setString( 3, report.getUrl( ) );
+            daoUtil.setString( 4, report.getPool( ) );
 
-        daoUtil.setInt( 1, report.getIdReport( ) );
-        daoUtil.setString( 2, report.getCode( ) );
-        daoUtil.setString( 3, report.getUrl( ) );
-        daoUtil.setString( 4, report.getPool( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );   
+    	}
     }
 
     /**
@@ -114,27 +115,27 @@ public final class JasperReportDAO implements IJasperReportDAO
      */
     public JasperReport load( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery( );
-
-        JasperReport report = null;
-
-        if ( daoUtil.next( ) )
-        {
-            report = new JasperReport( );
-
-            report.setIdReport( daoUtil.getInt( 1 ) );
-            report.setCode( daoUtil.getString( 2 ) );
-            report.setUrl( daoUtil.getString( 3 ) );
-            report.setPool( daoUtil.getString( 4 ) );
-            report.setFileFolder( daoUtil.getString( 5 ) );
-            report.addFileFormats( loadFileFormats( nId, plugin ) );
-        }
-
-        daoUtil.free( );
-
-        return report;
+    	JasperReport report = null;
+    	
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
+    	{
+    		daoUtil.setInt( 1, nId );
+	        daoUtil.executeQuery( ); 
+	 
+	        if ( daoUtil.next( ) )
+	        {
+	            report = new JasperReport( );
+	 
+	            report.setIdReport( daoUtil.getInt( 1 ) );
+	            report.setCode( daoUtil.getString( 2 ) );
+	            report.setUrl( daoUtil.getString( 3 ) );
+	            report.setPool( daoUtil.getString( 4 ) );
+	            report.setFileFolder( daoUtil.getString( 5 ) );
+	            report.addFileFormats( loadFileFormats( nId, plugin ) );
+	        }
+    	}
+    	
+    	return report;
     }
 
     /**
@@ -148,20 +149,20 @@ public final class JasperReportDAO implements IJasperReportDAO
      */
     public ArrayList<String> loadFileFormats( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILE_FORMATS, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery( );
-
-        ArrayList<String> listFileFormats = new ArrayList<String>( );
-
-        while ( daoUtil.next( ) )
-        {
-            listFileFormats.add( daoUtil.getString( 1 ) );
-        }
-
-        daoUtil.free( );
-
-        return listFileFormats;
+    	ArrayList<String> listFileFormats = new ArrayList<String>( );
+    	
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FILE_FORMATS, plugin ) )
+    	{
+    		daoUtil.setInt( 1, nId );
+            daoUtil.executeQuery( );
+            
+            while ( daoUtil.next( ) )
+            {
+                listFileFormats.add( daoUtil.getString( 1 ) );
+            }    	       
+    	}
+    	
+    	return listFileFormats;
     }
 
     /**
@@ -174,10 +175,11 @@ public final class JasperReportDAO implements IJasperReportDAO
      */
     public void delete( int nJasperReportId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nJasperReportId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+    	{
+    		daoUtil.setInt( 1, nJasperReportId );
+            daoUtil.executeUpdate( );    	       
+    	}
     }
 
     /**
@@ -190,14 +192,14 @@ public final class JasperReportDAO implements IJasperReportDAO
      */
     public void store( JasperReport report, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+    	{
+    		daoUtil.setInt( 1, report.getIdReport( ) );
+            daoUtil.setString( 2, report.getCode( ) );
+            daoUtil.setInt( 3, report.getIdReport( ) );
 
-        daoUtil.setInt( 1, report.getIdReport( ) );
-        daoUtil.setString( 2, report.getCode( ) );
-        daoUtil.setInt( 3, report.getIdReport( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );    	       
+    	}
     }
 
     /**
@@ -209,47 +211,47 @@ public final class JasperReportDAO implements IJasperReportDAO
      */
     public Collection<JasperReport> selectJasperReportsList( Plugin plugin )
     {
-        Collection<JasperReport> reportList = new ArrayList<JasperReport>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery( );
+    	Collection<JasperReport> reportList = new ArrayList<JasperReport>( );
+    	
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+    	{
+    		daoUtil.executeQuery( );
 
-        while ( daoUtil.next( ) )
-        {
-            JasperReport report = new JasperReport( );
+            while ( daoUtil.next( ) )
+            {
+                JasperReport report = new JasperReport( );
 
-            report.setIdReport( daoUtil.getInt( 1 ) );
-            report.setCode( daoUtil.getString( 2 ) );
-            report.setUrl( daoUtil.getString( 3 ) );
-            report.setPool( daoUtil.getString( 4 ) );
+                report.setIdReport( daoUtil.getInt( 1 ) );
+                report.setCode( daoUtil.getString( 2 ) );
+                report.setUrl( daoUtil.getString( 3 ) );
+                report.setPool( daoUtil.getString( 4 ) );
 
-            reportList.add( report );
-        }
-
-        daoUtil.free( );
-
+                reportList.add( report );
+            }    	       
+    	}
+    	
         return reportList;
     }
 
     public JasperReport loadByCode( String strKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_DESC, plugin );
-        daoUtil.setString( 1, strKey );
-        daoUtil.executeQuery( );
+    	JasperReport report = null;
+    	
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_DESC, plugin ) )
+    	{
+    		daoUtil.setString( 1, strKey );
+            daoUtil.executeQuery( );
+            if ( daoUtil.next( ) )
+            {
+                report = new JasperReport( );
 
-        JasperReport report = null;
-
-        if ( daoUtil.next( ) )
-        {
-            report = new JasperReport( );
-
-            report.setIdReport( daoUtil.getInt( 1 ) );
-            report.setCode( daoUtil.getString( 2 ) );
-            report.setUrl( daoUtil.getString( 3 ) );
-            report.setPool( daoUtil.getString( 4 ) );
-        }
-
-        daoUtil.free( );
-
+                report.setIdReport( daoUtil.getInt( 1 ) );
+                report.setCode( daoUtil.getString( 2 ) );
+                report.setUrl( daoUtil.getString( 3 ) );
+                report.setPool( daoUtil.getString( 4 ) );
+            }    	       
+    	}
+    	
         return report;
     }
 }

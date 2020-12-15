@@ -60,6 +60,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.w3c.tidy.Report;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -383,7 +384,7 @@ public class JasperJspBean extends PluginAdminPageJspBean
         String strFileName = fileItem.getName( );
         File file = new File( strFileName );
 
-        if ( !file.getName( ).equals( "" ) && !strReportCode.equals( null ) )
+        if ( !file.getName( ).equals( "" ) && strReportCode != null )
         {
             String strNameFile = file.getName( );
 
@@ -414,11 +415,22 @@ public class JasperJspBean extends PluginAdminPageJspBean
                     file.delete( );
                 }
 
-                FileOutputStream fosFile = new FileOutputStream( file );
-                fosFile.flush( );
-                fosFile.write( fileItem.get( ) );
-                fosFile.close( );
-                report.setUrl( strReportCode + "/" + strNameFile );
+                FileOutputStream fosFile = null;				
+				try 
+				{
+					fosFile = new FileOutputStream(file);
+					fosFile.flush( );
+	                fosFile.write( fileItem.get( ) );
+	                report.setUrl( strReportCode + "/" + strNameFile );
+				} 
+				catch (FileNotFoundException e) 
+				{
+					throw e;
+				}
+				finally 
+				{
+					fosFile.close( );
+				}
             }
         }
         else
