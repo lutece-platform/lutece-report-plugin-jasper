@@ -60,12 +60,14 @@ public final class JasperPortletDAO implements IJasperPortletDAO
      */
     public void insert( Portlet portlet )
     {
-        JasperPortlet p = (JasperPortlet) portlet;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT );
-        daoUtil.setInt( 1, p.getId( ) );
-        daoUtil.setString( 2, p.getJasperFeedId( ) );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT ) )
+    	{      
+            JasperPortlet p = (JasperPortlet) portlet;
+
+            daoUtil.setInt( 1, p.getId( ) );
+            daoUtil.setString( 2, p.getJasperFeedId( ) );
+            daoUtil.executeUpdate( ); 
+    	}
     }
 
     /**
@@ -76,10 +78,11 @@ public final class JasperPortletDAO implements IJasperPortletDAO
      */
     public void delete( int nPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE ) )
+    	{      
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeUpdate( ); 
+    	}
     }
 
     /**
@@ -90,14 +93,16 @@ public final class JasperPortletDAO implements IJasperPortletDAO
      */
     public void store( Portlet portlet )
     {
-        JasperPortlet p = (JasperPortlet) portlet;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE );
-        daoUtil.setInt( 1, p.getId( ) );
-        daoUtil.setString( 2, p.getJasperFeedId( ) );
-        daoUtil.setInt( 3, p.getId( ) );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE ) )
+    	{    
+            JasperPortlet p = (JasperPortlet) portlet;
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.setInt( 1, p.getId( ) );
+            daoUtil.setString( 2, p.getJasperFeedId( ) );
+            daoUtil.setInt( 3, p.getId( ) );
+
+            daoUtil.executeUpdate( );   
+    	}
     }
 
     /**
@@ -108,19 +113,20 @@ public final class JasperPortletDAO implements IJasperPortletDAO
      *            The identifier of the portlet
      */
     public Portlet load( int nIdPortlet )
-    {
+    { 
         JasperPortlet portlet = new JasperPortlet( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
-        daoUtil.setInt( 1, nIdPortlet );
-        daoUtil.executeQuery( );
+        
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT ) )
+    	{  
+            daoUtil.setInt( 1, nIdPortlet );
+            daoUtil.executeQuery( );
 
-        if ( daoUtil.next( ) )
-        {
-            portlet.setId( daoUtil.getInt( 1 ) );
-            portlet.setJasperFeedId( daoUtil.getString( 2 ) );
-        }
-
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                portlet.setId( daoUtil.getInt( 1 ) );
+                portlet.setJasperFeedId( daoUtil.getString( 2 ) );
+            }   
+    	}
 
         return portlet;
     }
@@ -134,19 +140,19 @@ public final class JasperPortletDAO implements IJasperPortletDAO
      */
     public boolean checkNoPortletLinked( int nIdJasperFeed )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PORTLET_LINKED );
-        daoUtil.setInt( 1, nIdJasperFeed );
-        daoUtil.executeQuery( );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PORTLET_LINKED ) )
+    	{   
+            daoUtil.setInt( 1, nIdJasperFeed );
+            daoUtil.executeQuery( );
 
-        if ( daoUtil.next( ) )
-        {
-            daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                daoUtil.free( );
 
-            return false;
-        }
-
-        daoUtil.free( );
-
+                return false;
+            }    
+    	}
+    	
         return true;
     }
 }

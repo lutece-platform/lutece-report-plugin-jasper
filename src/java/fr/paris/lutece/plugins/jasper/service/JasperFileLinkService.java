@@ -41,6 +41,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -66,9 +68,20 @@ public enum JasperFileLinkService
 
     public static String getLink( String strReportId, String strType )
     {
-        FileTypeContext context = getFileTypeContext( strType );
+        FileTypeContext context = null;
+        String fileLink = StringUtils.EMPTY;;
+        
+		try 
+		{
+			context = getFileTypeContext( strType );
+			fileLink = context.getFileLink( strReportId );
+		} 
+		catch (Exception e) 
+		{
+			throw e;
+		}
 
-        return context.getFileLink( strReportId );
+        return fileLink;
     }
 
     static FileTypeContext getFileTypeContext( String strType )
@@ -116,8 +129,15 @@ public enum JasperFileLinkService
 
         byte [ ] buffer = new byte [ 1024];
 
-        FileTypeContext context = getFileTypeContext( strJasperType );
-        buffer = context.getBuffer( strReportCode, request );
+        try 
+        {
+			FileTypeContext context = getFileTypeContext( strJasperType );
+			buffer = context.getBuffer( strReportCode, request );
+		} 
+        catch (Exception e) 
+        {
+			throw e;
+		}
 
         return buffer;
     }
@@ -133,8 +153,15 @@ public enum JasperFileLinkService
 
         byte [ ] buffer = new byte [ 1024];
 
-        FileTypeContext context = getFileTypeContext( strJasperType );
-        buffer = context.getBuffer( strReportCode, request );
+        try 
+        {
+			FileTypeContext context = getFileTypeContext( strJasperType );
+			buffer = context.getBuffer( strReportCode, request );
+		} 
+        catch (Exception e) 
+        {
+			throw e;
+		}
 
         return buffer;
     }
@@ -151,8 +178,17 @@ public enum JasperFileLinkService
     {
 
         byte [ ] buffer = new byte [ 1024];
-        FileTypeContext context = getFileTypeContext( strJasperType );
-        buffer = context.getBuffer( report, dataSource, parameters, request );
+        
+        try 
+        {
+			FileTypeContext context = getFileTypeContext( strJasperType );
+			buffer = context.getBuffer( report, dataSource, parameters, request );
+		} 
+        catch (Exception e) 
+        {
+			throw e;
+		}
+        
         return buffer;
     }
 
@@ -163,11 +199,24 @@ public enum JasperFileLinkService
      */
     public static String getFileName( HttpServletRequest request )
     {
-        String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
-        String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        FileTypeContext context = getFileTypeContext( strType );
 
-        return context.getFileName( strReportCode );
+        FileTypeContext context = null;
+        String fileName = StringUtils.EMPTY;;
+        
+		try 
+		{
+			String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
+			String strType = request.getParameter( PARAMETER_REPORT_TYPE );			
+			
+			context = getFileTypeContext( strType );
+			fileName = context.getFileName( strReportCode );
+		} 
+		catch (Exception e) 
+		{
+			throw e;
+		}
+
+        return fileName;
     }
 
     /**
