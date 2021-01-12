@@ -67,7 +67,7 @@ public enum JasperFileLinkService
     private static final String PARAMETER_JASPER_LIST = "list";
     HashMap<String, ILinkJasperReport> mapStrategies;
 
-    public static String getLink( String strReportId, String strType )
+    public static String getLink( String strReportId, String strType ) throws NullPointerException
     {
         FileTypeContext context = null;
         String fileLink = StringUtils.EMPTY;;
@@ -116,8 +116,8 @@ public enum JasperFileLinkService
     public static byte [ ] exportFile( HttpServletRequest request )
     {
         String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
-        String strType = request.getParameter( PARAMETER_REPORT_TYPE );
-        return exportFile( strReportCode, strType, request );
+        String strType = request.getParameter( PARAMETER_REPORT_TYPE );        
+		return exportFile( strReportCode, strType, request );
     }
 
     public static byte [ ] exportFile( HttpServletRequest request, String strReportCode )
@@ -126,7 +126,7 @@ public enum JasperFileLinkService
         return exportFile( strReportCode, strType, request );
     }
 
-    public static byte [ ] exportFile( String strReportCode, String strJasperType, HttpServletRequest request )
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, HttpServletRequest request ) throws NullPointerException
     {
 
         byte [ ] buffer = new byte [ 1024];
@@ -151,7 +151,7 @@ public enum JasperFileLinkService
         return exportFile( strReportCode, strJasperType, (JRDataSource) dataSource, request );
     }
 
-    public static byte [ ] exportFile( String strReportCode, String strJasperType, JRDataSource dataSource, HttpServletRequest request )
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, JRDataSource dataSource, HttpServletRequest request ) throws NullPointerException
     {
 
         byte [ ] buffer = new byte [ 1024];
@@ -178,7 +178,7 @@ public enum JasperFileLinkService
     }
 
     public static byte [ ] exportFile( JasperReport report, String strJasperType, JRDataSource dataSource, Map<String, Object> parameters,
-            HttpServletRequest request )
+            HttpServletRequest request ) throws NullPointerException
     {
 
         byte [ ] buffer = new byte [ 1024];
@@ -202,7 +202,7 @@ public enum JasperFileLinkService
      * @param request
      * @return
      */
-    public static String getFileName( HttpServletRequest request )
+    public static String getFileName( HttpServletRequest request ) throws NullPointerException
     {
 
         FileTypeContext context = null;
