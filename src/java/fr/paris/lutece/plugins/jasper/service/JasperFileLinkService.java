@@ -45,6 +45,7 @@ import org.apache.commons.lang.StringUtils;
 
 import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
@@ -76,8 +77,9 @@ public enum JasperFileLinkService
 			context = getFileTypeContext( strType );
 			fileLink = context.getFileLink( strReportId );
 		} 
-		catch (Exception e) 
+		catch (NullPointerException e) 
 		{
+			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
 			throw e;
 		}
 
@@ -134,8 +136,9 @@ public enum JasperFileLinkService
 			FileTypeContext context = getFileTypeContext( strJasperType );
 			buffer = context.getBuffer( strReportCode, request );
 		} 
-        catch (Exception e) 
+        catch (NullPointerException e) 
         {
+			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
 			throw e;
 		}
 
@@ -158,8 +161,9 @@ public enum JasperFileLinkService
 			FileTypeContext context = getFileTypeContext( strJasperType );
 			buffer = context.getBuffer( strReportCode, request );
 		} 
-        catch (Exception e) 
+        catch (NullPointerException e) 
         {
+			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
 			throw e;
 		}
 
@@ -184,8 +188,9 @@ public enum JasperFileLinkService
 			FileTypeContext context = getFileTypeContext( strJasperType );
 			buffer = context.getBuffer( report, dataSource, parameters, request );
 		} 
-        catch (Exception e) 
+        catch (NullPointerException e) 
         {
+			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
 			throw e;
 		}
         
@@ -211,8 +216,9 @@ public enum JasperFileLinkService
 			context = getFileTypeContext( strType );
 			fileName = context.getFileName( strReportCode );
 		} 
-		catch (Exception e) 
+		catch (NullPointerException e) 
 		{
+			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
 			throw e;
 		}
 
