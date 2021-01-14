@@ -67,29 +67,20 @@ public enum JasperFileLinkService
     private static final String PARAMETER_JASPER_LIST = "list";
     HashMap<String, ILinkJasperReport> mapStrategies;
 
-    public static String getLink( String strReportId, String strType ) throws NullPointerException
+    public static String getLink( String strReportId, String strType )
     {
         FileTypeContext context = null;
-        String fileLink = StringUtils.EMPTY;;
+        String fileLink = StringUtils.EMPTY;
         
-		try 
-		{
-			context = getFileTypeContext( strType );
-			fileLink = context.getFileLink( strReportId );
-		} 
-		catch (NullPointerException e) 
-		{
-			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
-			throw e;
-		}
-
+        context = getFileTypeContext( strType );
+		fileLink = context.getFileLink( strReportId );
+        
         return fileLink;
     }
 
     static FileTypeContext getFileTypeContext( String strType )
     {
         Collection<ILinkJasperReport> col = ExportFormatService.INSTANCE.getExportTypes( );
-        FileTypeContext fileTypeContext = null;
 
         for ( ILinkJasperReport renderFormat : col )
         {
@@ -97,13 +88,9 @@ public enum JasperFileLinkService
             {
                 return new FileTypeContext( renderFormat );
             }
-            else
-            {
-                fileTypeContext = new FileTypeContext( new HtmlJasperRender( ) );
-            }
         }
 
-        return fileTypeContext;
+        return new FileTypeContext( new HtmlJasperRender( ) );
     }
 
     /**
@@ -126,21 +113,13 @@ public enum JasperFileLinkService
         return exportFile( strReportCode, strType, request );
     }
 
-    public static byte [ ] exportFile( String strReportCode, String strJasperType, HttpServletRequest request ) throws NullPointerException
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, HttpServletRequest request )
     {
 
         byte [ ] buffer = new byte [ 1024];
 
-        try 
-        {
-			FileTypeContext context = getFileTypeContext( strJasperType );
-			buffer = context.getBuffer( strReportCode, request );
-		} 
-        catch (NullPointerException e) 
-        {
-			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
-			throw e;
-		}
+		FileTypeContext context = getFileTypeContext( strJasperType );
+		buffer = context.getBuffer( strReportCode, request );
 
         return buffer;
     }
@@ -151,21 +130,13 @@ public enum JasperFileLinkService
         return exportFile( strReportCode, strJasperType, (JRDataSource) dataSource, request );
     }
 
-    public static byte [ ] exportFile( String strReportCode, String strJasperType, JRDataSource dataSource, HttpServletRequest request ) throws NullPointerException
+    public static byte [ ] exportFile( String strReportCode, String strJasperType, JRDataSource dataSource, HttpServletRequest request )
     {
 
         byte [ ] buffer = new byte [ 1024];
 
-        try 
-        {
-			FileTypeContext context = getFileTypeContext( strJasperType );
-			buffer = context.getBuffer( strReportCode, request );
-		} 
-        catch (NullPointerException e) 
-        {
-			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
-			throw e;
-		}
+		FileTypeContext context = getFileTypeContext( strJasperType );
+		buffer = context.getBuffer( strReportCode, request );
 
         return buffer;
     }
@@ -178,21 +149,13 @@ public enum JasperFileLinkService
     }
 
     public static byte [ ] exportFile( JasperReport report, String strJasperType, JRDataSource dataSource, Map<String, Object> parameters,
-            HttpServletRequest request ) throws NullPointerException
+            HttpServletRequest request )
     {
 
         byte [ ] buffer = new byte [ 1024];
-        
-        try 
-        {
-			FileTypeContext context = getFileTypeContext( strJasperType );
-			buffer = context.getBuffer( report, dataSource, parameters, request );
-		} 
-        catch (NullPointerException e) 
-        {
-			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
-			throw e;
-		}
+
+		FileTypeContext context = getFileTypeContext( strJasperType );
+		buffer = context.getBuffer( report, dataSource, parameters, request );
         
         return buffer;
     }
@@ -202,25 +165,17 @@ public enum JasperFileLinkService
      * @param request
      * @return
      */
-    public static String getFileName( HttpServletRequest request ) throws NullPointerException
+    public static String getFileName( HttpServletRequest request )
     {
 
         FileTypeContext context = null;
         String fileName = StringUtils.EMPTY;;
-        
-		try 
-		{
-			String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
-			String strType = request.getParameter( PARAMETER_REPORT_TYPE );			
-			
-			context = getFileTypeContext( strType );
-			fileName = context.getFileName( strReportCode );
-		} 
-		catch (NullPointerException e) 
-		{
-			AppLogService.error( "NullPointerException error : " + e.getMessage( ), e );
-			throw e;
-		}
+
+		String strReportCode = request.getParameter( PARAMETER_REPORT_ID );
+		String strType = request.getParameter( PARAMETER_REPORT_TYPE );			
+		
+		context = getFileTypeContext( strType );
+		fileName = context.getFileName( strReportCode );
 
         return fileName;
     }
