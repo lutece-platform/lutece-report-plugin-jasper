@@ -429,7 +429,8 @@ public class JasperJspBean extends PluginAdminPageJspBean
 				}
 				finally 
 				{
-					fosFile.close( );
+					if (fosFile != null) 
+						fosFile.close( );
 				}
             }
         }
