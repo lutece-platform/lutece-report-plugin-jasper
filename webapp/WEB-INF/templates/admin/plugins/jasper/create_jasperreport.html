@@ -1,33 +1,32 @@
-<div class="content-box" >
-    
-    <h2>#i18n{jasper.create_jasperreport.tableLabel}</h2>
-    
-    <form method="post"   enctype="multipart/form-data" name="create_jasperreport" id="create_jasperreport" action="jsp/admin/plugins/jasper/DoCreateJasperReport.jsp">
-      
-         <p>
-            
-           		 <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report"  />
-            <div>
-            <label for="jasperreport_code" >#i18n{jasper.create_jasperreport.rowTitleCode} * :</label>
-            <input type="text" id="jasperreport_code" name="jasperreport_code" size="60" maxlength="50" tabindex="1" />
-            </div>
-        </p>
-        
-        <p>
-            <label for="report_template" >#i18n{jasper.create_jasperreport.rowTitleTemplate}  :</label>
-            <input type="file" name="report_template" size="60" maxlength="100" />
-        </p> 
-        <p>
-            <label report_pool" >#i18n{jasper.create_jasperreport.rowTitlePool}  :</label>
-            <@combo name="report_pool" default_value="" items=pool_list />
-        </p>
-        <p>   
-        	<input type="submit" value="#i18n{jasper.create_jasperreport.buttonValidate}" class="button" tabindex="3" />
-        </p>
-        
-    </form>
- 
-    
-</div>
 
-
+<@row>
+    <@columns>
+        <@box>        	
+	        <@boxHeader title='#i18n{jasper.create_jasperreport.tableLabel}' />     
+	        <@boxBody>
+	        
+		        <@tform method='post' name='create_jasperreport' id='create_jasperreport' action='jsp/admin/plugins/jasper/DoCreateJasperReport.jsp'>
+		        	<@input type='hidden' id='jasperreport_id_report' name='jasperreport_id_report' />
+		        	
+		        	<@formGroup labelFor='jasperreport_code' labelKey='#i18n{jasper.create_jasperreport.rowTitleCode}' mandatory=true>
+		        		<@input type='text' name='jasperreport_code' id='jasperreport_code' maxlength=50 />				
+					</@formGroup>	
+					
+					<@formGroup labelFor='jasperreport_code' labelKey='#i18n{jasper.create_jasperreport.rowTitleTemplate}' mandatory=true>
+		        		<@input type='file' name='jasperreport_code' id='jasperreport_code' maxlength=50 />					
+					</@formGroup>	
+					
+					<@formGroup labelFor='jasperreport_code' labelKey='#i18n{jasper.create_jasperreport.rowTitlePool}' mandatory=true>
+						<@select name='report_pool' id='report_pool' items=pool_list sort=true size='sm' />
+						
+					</@formGroup>	
+					
+					<@formGroup>
+						<@button type='submit' title='#i18n{jasper.create_jasperreport.buttonValidate}' hideTitle=['xs','ms'] buttonIcon='plus' />
+						<@aButton href='jsp/admin/plugins/jasper/ManageJasperReports.jsp' title='Annuler' buttonIcon='close' color='default' />
+					</@formGroup>									
+				</@tform>
+	        </@boxBody>
+        </@box>
+    </@columns>
+</@row>

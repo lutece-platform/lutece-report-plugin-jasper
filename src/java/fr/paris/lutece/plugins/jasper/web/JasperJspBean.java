@@ -35,10 +35,6 @@ package fr.paris.lutece.plugins.jasper.web;
 
 import fr.paris.lutece.plugins.jasper.business.JasperReport;
 import fr.paris.lutece.plugins.jasper.business.JasperReportHome;
-import fr.paris.lutece.plugins.jasper.service.ExportFormatService;
-import fr.paris.lutece.plugins.jasper.service.FileTypeContext;
-import fr.paris.lutece.plugins.jasper.service.ILinkJasperReport;
-import fr.paris.lutece.plugins.jasper.service.export.HtmlJasperRender;
 import fr.paris.lutece.portal.service.database.AppConnectionService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
@@ -56,8 +52,6 @@ import fr.paris.lutece.util.html.Paginator;
 import fr.paris.lutece.util.url.UrlItem;
 
 import org.apache.commons.fileupload.FileItem;
-
-import org.w3c.tidy.Report;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,7 +79,6 @@ public class JasperJspBean extends PluginAdminPageJspBean
     // Parameters
     private static final String PARAMETER_JASPERREPORT_ID_REPORT = "jasperreport_id_report";
     private static final String PARAMETER_JASPERREPORT_CODE = "jasperreport_code";
-    private static final String PARAMETER_REPORT_FILE_FOLDER = "file_folder";
     private static final String PARAMETER_REPORT_TEMPLATE = "report_template";
     private static final String PARAMETER_REPORT_POOL = "report_pool";
     private static final String PARAMETER_PAGE_INDEX = "page_index";
@@ -94,19 +87,15 @@ public class JasperJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_MANAGE_JASPERREPORTS = "/admin/plugins/jasper/manage_jasperreport.html";
     private static final String TEMPLATE_CREATE_JASPERREPORT = "/admin/plugins/jasper/create_jasperreport.html";
     private static final String TEMPLATE_MODIFY_JASPERREPORT = "/admin/plugins/jasper/modify_jasperreport.html";
-    private static final String TEMPLATE_MANAGE_REPORT_FILE_TYPES = "/admin/plugins/jasper/manage_report_file_types.html";
 
     // Properties for page titles
     private static final String PROPERTY_PAGE_TITLE_MANAGE_JASPERREPORTS = "jasper.manage_jasperreports.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MODIFY_JASPERREPORT = "jasper.modify_jasperreport.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_CREATE_JASPERREPORT = "jasper.create_jasperreport.pageTitle";
-    private static final String PROPERTY_PAGE_TITLE_MANAGE_REPORT_FILE_TYPES = "jasper.manage_report_file_types.pageTitle";
 
     // Markers
     private static final String MARK_JASPERREPORT_LIST = "jasperreport_list";
     private static final String MARK_JASPERREPORT = "jasperreport";
-    private static final String MARK_FILE_TYPES = "file_types";
-    private static final String MARK_GENERATED_FILE_TYPES = "generated_file_types";
     private static final String MARK_PAGINATOR = "paginator";
     private static final String MARK_NB_ITEMS_PER_PAGE = "nb_items_per_page";
     private static final String MARK_SECTION_POOL_LIST = "pool_list";
@@ -284,31 +273,6 @@ public class JasperJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Returns the fiule type selection for generation
-     *
-     * @param request
-     *            The Http request
-     * @return The HTML form to update info
-     */
-    public String getManageFileTypes( HttpServletRequest request )
-    {
-        setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_REPORT_FILE_TYPES );
-
-        int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
-        Collection<ILinkJasperReport> listFileTypes = ExportFormatService.INSTANCE.getExportTypes( );
-
-        Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( MARK_JASPERREPORT, jasperreport );
-        model.put( MARK_FILE_TYPES, listFileTypes );
-        model.put( MARK_GENERATED_FILE_TYPES, jasperreport.getFileFormats( ) );
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_REPORT_FILE_TYPES, getLocale( ), model );
-
-        return getAdminPage( template.getHtml( ) );
-    }
-
-    /**
      * Process the change form of a jasperreport
      *
      * @param request
@@ -334,38 +298,6 @@ public class JasperJspBean extends PluginAdminPageJspBean
         }
 
         jasperreport.setCode( request.getParameter( PARAMETER_JASPERREPORT_CODE ) );
-        JasperReportHome.update( jasperreport, getPlugin( ) );
-
-        return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;
-    }
-
-    /**
-     * Process the change form of a jasperreport
-     *
-     * @param request
-     *            The Http request
-     * @return The Jsp URL of the process result
-     */
-    public String doModifyReportFileTypes( HttpServletRequest request )
-    {
-        int nId = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        JasperReport jasperreport = JasperReportHome.findByPrimaryKey( nId, getPlugin( ) );
-
-        if ( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ).equals( "" ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-        }
-
-        int nIdReport = Integer.parseInt( request.getParameter( PARAMETER_JASPERREPORT_ID_REPORT ) );
-        jasperreport.setIdReport( nIdReport );
-
-        if ( request.getParameter( PARAMETER_REPORT_FILE_FOLDER ).equals( "" ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-        }
-
-        jasperreport.setFileFolder( request.getParameter( PARAMETER_REPORT_FILE_FOLDER ) );
-        // TODO Important To change file types
         JasperReportHome.update( jasperreport, getPlugin( ) );
 
         return JSP_REDIRECT_TO_MANAGE_JASPERREPORTS;

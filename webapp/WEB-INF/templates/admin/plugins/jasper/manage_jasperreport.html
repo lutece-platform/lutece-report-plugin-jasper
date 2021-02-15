@@ -1,52 +1,40 @@
-<div class="row" >
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box [box-solid] [box-primary | box-success | box-info | box-danger | box-warning]">
-            <div class="box-header">
-                <h3 class="box-title">#i18n{jasper.manage_jasperreport.tableLabel}</h3>
-                <form class="form-inline pull-right" method="post"  action="jsp/admin/plugins/jasper/CreateJasperReport.jsp">
-                    <button class="btn btn-xs btn-flat btn-primary" type="submit" >
-                        <i class="fa fa-plus"></i>
-                        <span class="hidden-phone" >#i18n{jasper.manage_jasperreport.buttonAddJasperReport}</span>
-                    </button>
-                </form>
-
-                <div class="box-body table-responsive">
-                    <table class="table table-hover table-condensed">
-                        <thead>
-                            <tr>
-                        <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report"  />
-                        <th>#i18n{jasper.manage_jasperreport.columnDescription}</th>
-                        <th>#i18n{jasper.manage_jasperreport.columnUrl}</th>
-                        <th>#i18n{jasper.manage_jasperreport.columnPool}</th>
-                        <th>#i18n{jasper.manage_jasperreport.columnAction}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <#list jasperreport_list as jasperreport >
-                            <tr>
-                        <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report"  />
-                        <td>
-                            <a href="jsp/admin/plugins/jasper/ModifyJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}" class="bullet-link">
-                                ${jasperreport.code}
-                            </a>
-                        </td>
-                        <td>${jasperreport.url}</td>
-                        <td>${jasperreport.pool}</td>
-                        <td>
-                            <a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/jasper/ManageReportFileTypes.jsp?jasperreport_id_report=${jasperreport.idReport}" title="#i18n{jasper.manage_jasperreport.labelGeneration}">
-                                <span class="fa fa-pencil" ></span>
-                            </a>
-                            <a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/jasper/RemoveJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}" title="#i18n{portal.util.labelDelete}" >
-                                <span class="fa fa-trash" ></span>
-                            </a>
-                        </td>
-                        </tr>
-                        </#list>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+<@row>
+    <@columns>
+        <@box>
+            <@boxHeader title='#i18n{jasper.manage_jasperreport.tableLabel}'>
+            	<@tform method='post' action='jsp/admin/plugins/jasper/CreateJasperReport.jsp'>
+                    <@button type='submit' title='#i18n{jasper.manage_jasperreport.buttonAddJasperReport} ' hideTitle=['xs','ms'] buttonIcon='plus' />
+                </@tform>
+			</@boxHeader>
+            <@boxBody>
+                <@table>
+	                <@tr>
+	         			<@input type='hidden' id='jasperreport_id_report' name='jasperreport_id_report' />	                   
+	                    <@th>#i18n{jasper.manage_jasperreport.columnCode}</@th>
+	                    <@th>#i18n{jasper.manage_jasperreport.columnUrl}</@th>
+	                    <@th>#i18n{jasper.manage_jasperreport.columnPool}</@th>
+	                    <@th>#i18n{jasper.manage_jasperreport.columnAction}</@th>
+	                </@tr>
+	                    
+	               	<#list jasperreport_list as jasperreport >
+	                	<@tr>
+	                    	<@input type='hidden' id='jasperreport_id_report' name='jasperreport_id_report' />
+	                  		<@td>
+	                      		<@link href="jsp/admin/plugins/jasper/ModifyJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}" >
+	                          		${jasperreport.code}
+	                      		</@link>
+	                  		</@td>
+	                  		<@td>${jasperreport.url}</@td>
+	                  		<@td>${jasperreport.pool}</@td>
+		                  	<@td>
+		                    	<@aButton href='jsp/admin/plugins/jasper/ModifyJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}' title='#i18n{jasper.manage_jasperreport.actionModify}' buttonIcon='pencil' size='sm' />		                       		                    			                    	
+		                    	<@aButton href='jsp/admin/plugins/jasper/RemoveJasperReport.jsp?jasperreport_id_report=${jasperreport.idReport}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' size='sm' />	                  		
+	                  		</@td>
+	                    </@tr>
+	                </#list>
+                </@table>
+            </@boxBody>
+        </@box>
+    </@columns>
+</@row>
+		

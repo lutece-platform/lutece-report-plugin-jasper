@@ -4,4 +4,4 @@
 
 <% 
      response.sendRedirect( jasper.doInsertLink( request ) );
-%>
+%>S

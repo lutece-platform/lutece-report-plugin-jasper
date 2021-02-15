@@ -118,7 +118,7 @@ public class JasperLinkServiceJspBean extends InsertServiceJspBean implements In
 
         String strUrl = JasperFileLinkService.getLink( strReportId, strFileChoice );
         String strInsert = "<a href=\"" + strUrl + "\">" + strReportId + "</a>";
-
+        
         return insertUrl( request, strInput, strInsert );
     }
 }
