@@ -1,28 +1,24 @@
-
-<div class="content-box">
-       
-    <form method="post"  name="modify_jasperreport" action="jsp/admin/plugins/jasper/DoModifyJasperReport.jsp">
-        <h2>#i18n{jasper.modify_jasperreport.tableLabel}</h2>
-        
-
-        <p>
-             	  
-                   	   <input type="hidden" id="jasperreport_id_report" name="jasperreport_id_report" value="${jasperreport.idReport}"/>
- 			
-             <div>
-            <label for="jasperreport_code" >#i18n{jasper.modify_jasperreport.rowTitleCode} * :</label>
-            <input type="text" id="jasperreport_code" name="jasperreport_code" size="60" maxlength="50" value="${jasperreport.code}" tabindex="1" />
-            </div>
-        </p>
-        <p>   
-            <input type="submit" value="#i18n{jasper.modify_jasperreport.buttonModifyJasperReport}" class="button" tabindex="3" />
-            <input class="button" type="button" onclick="javascript:history.go(-1)" value="Cancel" />	
-        </p>
-        
-    </form>
-      
-  
-    
-</div>
+<@row>
+    <@columns>
+        <@box>        	
+	        <@boxHeader title='#i18n{jasper.modify_jasperreport.tableLabel}' />     
+	        <@boxBody>
+	        
+		        <@tform method='post' name='modify_jasperreport' action='jsp/admin/plugins/jasper/DoModifyJasperReport.jsp'>
+		        	<@input type='hidden' id='jasperreport_id_report' name='jasperreport_id_report' value='${jasperreport.idReport}' />
+		        	
+		        	<@formGroup labelFor='jasperreport_code' labelKey='#i18n{jasper.modify_jasperreport.rowTitleCode}' mandatory=true>
+		        		<@input type='text' name='jasperreport_code' id='jasperreport_code' value='${jasperreport.code}' maxlength=50 />
+	        		</@formGroup>		
+					
+	        		<@formGroup >
+						<@button type='submit' title='#i18n{jasper.modify_jasperreport.buttonModifyJasperReport}' hideTitle=['xs','ms'] buttonIcon='plus' />
+						<@aButton href='jsp/admin/plugins/jasper/ManageJasperReports.jsp' title='Annuler' buttonIcon='close' color='default' />					
+					</@formGroup> 									
+				</@tform>
+	        </@boxBody>
+        </@box>
+    </@columns>
+</@row>
 
 
