@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import fr.paris.lutece.plugins.jasper.business.JasperReportHome;
+import fr.paris.lutece.plugins.jasper.service.CompiledJasperTemplateCacheService;
 import fr.paris.lutece.plugins.jasper.service.ILinkJasperReport;
 import fr.paris.lutece.plugins.jasper.service.JasperConnectionService;
 import fr.paris.lutece.plugins.jasper.service.JasperFileLinkService;
@@ -80,6 +81,7 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
     private static final String SESSION_DATA_SOURCE = "dataSource";
     private static final String URL_PATTERN = "jsp/site/plugins/jasper/DownloadFile.jsp?report_type={0}&report_id={1}";
     private static final String FILE_EXTENSION_DELIMITER = ".";
+    private static final String JRXML_EXTENSION = ".jrxml";
 
     /**
      * {@inheritDoc }
@@ -179,7 +181,15 @@ public abstract class AbstractDefaultJasperRender implements ILinkJasperReport, 
 
             File reportFile = new File( strAbsolutePath );
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject( reportFile );
+            JasperReport jasperReport = null;
+
+            if ( strAbsolutePath.endsWith( JRXML_EXTENSION ) )
+            {
+                jasperReport = CompiledJasperTemplateCacheService.getInstance( ).getCompiledJasperTemplate( report.getCode( ), reportFile );
+            } else
+            {
+                jasperReport = ( JasperReport ) JRLoader.loadObject( reportFile );
+            }
 
             String strImageDirectoryPath = AppPropertiesService.getProperty( PROPERTY_IMAGES_FILES_PATH );
             String strImageDirectoryAbsolutePath = new StringBuffer( AppPathService.getWebAppPath( ) ).append( strImageDirectoryPath )
